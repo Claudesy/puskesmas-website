@@ -31,12 +31,6 @@ const Hero = () => {
   ];
   const controlCallouts = [
     {
-      title: 'Deteksi Dini',
-      detail: 'Perubahan gejala terpantau lebih awal.',
-      labelClass: 'top-[10%] left-[-14%] items-end text-right',
-      lineClass: 'top-[27%] left-[27%] w-16 rotate-[-18deg]',
-    },
-    {
       title: 'Terapi Lebih Tepat',
       detail: 'Rencana obat disesuaikan tiap progres.',
       labelClass: 'top-[24%] right-[-14%] items-start text-left',
@@ -64,6 +58,26 @@ const Hero = () => {
     >
       {/* Chief's Cream Gradient Background */}
       <div className="absolute inset-0 bg-cream-gradient pointer-events-none" />
+
+      {/* IGD Banner - Top */}
+      <div
+        className={`absolute top-20 right-6 z-20 flex justify-end transition-all duration-700
+          ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
+        style={{ transitionDelay: '200ms' }}
+      >
+        <a
+          href="tel:0354689746"
+          className="inline-flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-red-500/30 transition-all duration-300 hover:scale-105 group"
+        >
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white" />
+          </span>
+          <Ambulance className="w-4 h-4" />
+          <span>IGD 24 Jam — (0354) 689746</span>
+          <Phone className="w-4 h-4 transition-transform group-hover:rotate-12" />
+        </a>
+      </div>
 
       {/* Grid Background */}
       <div
@@ -293,32 +307,6 @@ const Hero = () => {
               ))}
             </div>
 
-            {/* Emergency Quick-Access Card */}
-            <div
-              className={`mt-5 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-              style={{ transitionDelay: '950ms' }}
-            >
-              <a
-                href="tel:0354689746"
-                className="flex items-center gap-4 bg-red-50 border border-red-200 rounded-2xl px-5 py-4 group hover:bg-red-100 hover:border-red-300 transition-all duration-300"
-              >
-                <div className="relative flex-shrink-0">
-                  <div className="w-11 h-11 rounded-xl bg-red-600 flex items-center justify-center shadow-md shadow-red-500/30 group-hover:scale-110 transition-transform duration-300">
-                    <Ambulance className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
-                  </span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs uppercase tracking-wider text-red-400 font-semibold mb-0.5">Kegawatan / IGD</p>
-                  <p className="text-base font-bold text-red-700">(0354) 689746</p>
-                  <p className="text-xs text-red-400">Siaga 24 jam · Segera hubungi jika darurat</p>
-                </div>
-                <Phone className="w-5 h-5 text-red-400 flex-shrink-0 group-hover:rotate-12 transition-transform duration-300" />
-              </a>
-            </div>
           </div>
         </div>
       </div>

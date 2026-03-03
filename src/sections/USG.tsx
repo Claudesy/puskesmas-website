@@ -53,7 +53,7 @@ const USG = () => {
     {
       icon: Baby,
       title: 'Ibu Hamil',
-      desc: 'Trimester 1, 2, dan 3 untuk memantau perkembangan janin',
+      desc: 'Trimester 1 dan 3 untuk memantau perkembangan janin',
       highlight: true,
     },
     {

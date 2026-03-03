@@ -70,14 +70,39 @@ const About = () => {
             </div>
 
             {/* Chief's Headline */}
-            <h2
-              className={`text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2D2420] mt-4 mb-6 leading-tight
+            <div
+              className={`flex flex-wrap items-start gap-3 mt-4 mb-6
                 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
               style={{ transitionDelay: '100ms' }}
             >
-              UPTD Puskesmas{' '}
-              <span className="text-[#C9A87C]">Poned Balowerti</span>
-            </h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2D2420] leading-tight">
+                UPTD Puskesmas{' '}
+                <span className="text-[#C9A87C]">Poned Balowerti</span>
+              </h2>
+
+              {/* Paripurna Badge */}
+              <div className="flex-shrink-0 mt-1 sm:mt-2">
+                <div
+                  className="inline-flex flex-col items-center px-3 py-2 rounded-2xl border"
+                  style={{
+                    background: 'linear-gradient(135deg,#2D2420 0%,#1C1917 100%)',
+                    borderColor: 'rgba(201,168,124,0.35)',
+                    boxShadow: '0 4px 16px rgba(201,168,124,0.2)',
+                  }}
+                >
+                  <div className="flex gap-0.5 mb-1">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} className="w-3 h-3" viewBox="0 0 24 24" fill="#F4C430">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                    ))}
+                  </div>
+                  <span className="text-[9px] font-bold tracking-[0.15em] uppercase" style={{ color: '#C9A87C' }}>
+                    Paripurna
+                  </span>
+                </div>
+              </div>
+            </div>
 
             {/* Chief's Body Text */}
             <p
