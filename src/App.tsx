@@ -1,6 +1,9 @@
 // Chief's Main App - Puskesmas Balowerti Digital Sanctuary
 // Cream Color Palette: #C9A87C
 
+import { ReactLenis, useLenis } from 'lenis/react';
+import { useEffect } from 'react';
+
 import Navigation from './sections/Navigation';
 import Hero from './sections/Hero';
 import About from './sections/About';
@@ -16,8 +19,38 @@ import StoryScroll from './components/StoryScroll';
 import PatientFlow from './sections/PatientFlow';
 import Diseases from './sections/Diseases';
 
+const NAV_HEIGHT = 72;
+
+// Hook: bridge Lenis scrollTo ke anchor click handler di main.tsx
+function LenisBridge() {
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (!lenis) return;
+    // Expose lenis instance ke window agar global handler di main.tsx bisa pakai
+    (window as Window & { __lenis?: typeof lenis }).__lenis = lenis;
+    return () => { delete (window as Window & { __lenis?: typeof lenis }).__lenis; };
+  }, [lenis]);
+
+  return null;
+}
+
 function App() {
   return (
+    <ReactLenis
+      root
+      options={{
+        duration: 1.4,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // expo out
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 0.9,
+        touchMultiplier: 1.5,
+        infinite: false,
+      }}
+    >
+      <LenisBridge />
     <div className="relative min-h-screen bg-[#F8F5F2]">
       {/* Dot grid background */}
       <div
@@ -34,21 +67,24 @@ function App() {
       </div>
       <StoryScroll />
       <main className="relative">
+        {/* Hero — langsung visible, tidak perlu reveal */}
         <Hero />
-        <About />
-        <Doctors />
-        <Services />
-        <PatientFlow />
-        <Diseases />
-        <Facilities />
-        <USG />
-        <Testimonials />
-        <Reservation />
-        <Location />
-        <Footer />
+        <div data-reveal="left"><About /></div>
+        <div data-reveal="right"><Doctors /></div>
+        <div data-reveal="left"><PatientFlow /></div>
+        <div data-reveal="right"><Diseases /></div>
+        <div data-reveal="left"><Services /></div>
+        <div data-reveal="right"><Facilities /></div>
+        <div data-reveal="left"><USG /></div>
+        <div data-reveal="right"><Testimonials /></div>
+        <div data-reveal="left"><Reservation /></div>
+        <div data-reveal="right"><Location /></div>
+        <div data-reveal><Footer /></div>
       </main>
     </div>
+    </ReactLenis>
   );
 }
 
+export { NAV_HEIGHT };
 export default App;

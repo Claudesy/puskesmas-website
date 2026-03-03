@@ -136,7 +136,7 @@ const categories = [
       'Tinea corporis', 'Tinea manus', 'Tinea unguium',
       'Tinea cruris', 'Tinea pedis', 'Pitiriasis versicolor',
       'Candidiasis mucocutan ringan', 'Cutaneus larvamigran',
-      'Filariasis', 'Pedikulosis kapitis', 'Pediculosis pubis', 'Scabies',
+      'Filariasis', 'Pedikulosis kapitis', 'Pediculosis pubis', 'Scabies', 'Veruka vulgaris',
     ],
   },
   {

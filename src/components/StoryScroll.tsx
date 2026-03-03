@@ -117,7 +117,7 @@ const StoryScroll = () => {
   return (
     <>
       <div
-        className={`hidden xl:block fixed left-3 top-1/2 -translate-y-1/2 z-40 pointer-events-none transition-opacity duration-300 ${
+        className={`hidden xl:block fixed right-3 top-1/2 -translate-y-1/2 z-40 pointer-events-none transition-opacity duration-300 ${
           isStoryVisible ? 'opacity-100' : 'opacity-0'
         }`}
       >

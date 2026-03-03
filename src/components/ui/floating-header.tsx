@@ -30,12 +30,10 @@ export function FloatingHeader({ crewPortalUrl = 'http://localhost:3000' }: Floa
     { icon: Youtube, label: 'YouTube', href: 'https://www.youtube.com/@puskesmasbalowertikediri' },
   ];
 
-  function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, href: string, external?: boolean) {
+  function handleNavClick(_e: React.MouseEvent<HTMLAnchorElement>, _href: string, external?: boolean) {
     if (external) { setOpen(false); return; }
-    e.preventDefault();
+    // Biarkan global smooth scroll handler di main.tsx yang menangani offset
     setOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
   }
 
   return (
@@ -67,7 +65,7 @@ export function FloatingHeader({ crewPortalUrl = 'http://localhost:3000' }: Floa
               key={link.label}
               href={link.href}
               onClick={(e) => handleNavClick(e, link.href, link.external)}
-              className={buttonVariants({ variant: 'ghost', size: 'sm' })}
+              className="font-['DM_Sans'] font-medium tracking-[0.04em] text-[13px] text-[#2D2420] px-4 py-1.5 rounded-full bg-transparent hover:bg-[#FAF3EB] hover:text-[#C9A87C] border border-transparent hover:border-[#EADDCB] transition-all duration-200"
             >
               {link.label}
             </a>
@@ -136,7 +134,7 @@ export function FloatingHeader({ crewPortalUrl = 'http://localhost:3000' }: Floa
                     key={link.label}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href, link.external)}
-                    className={buttonVariants({ variant: 'ghost', className: 'justify-start text-[#2D2420]' })}
+                    className={cn(buttonVariants({ variant: 'ghost', className: 'justify-start text-[#2D2420]' }), "font-['DM_Sans'] font-medium tracking-[0.04em]")}
                   >
                     {link.label}
                   </a>

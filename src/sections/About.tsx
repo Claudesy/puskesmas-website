@@ -2,7 +2,7 @@
 // Using actual Puskesmas Balowerti photo
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Clock, Users, MapPin } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const About = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -26,92 +26,65 @@ const About = () => {
     return () => observer.disconnect();
   }, []);
 
-  const stats = [
-    {
-      icon: Clock,
-      value: '24',
-      label: 'Jam',
-      description: 'Layanan IGD & Rawat Inap',
-    },
-    {
-      icon: Users,
-      value: '80+',
-      label: 'Tenaga',
-      description: 'Medis & Paramedis',
-    },
-    {
-      icon: MapPin,
-      value: '5',
-      label: 'Wilayah',
-      description: 'Area Kerja',
-    },
-  ];
-
   return (
     <section
       ref={sectionRef}
       id="about"
-      className="relative w-full py-14 lg:py-20 bg-[#F8F5F2] overflow-hidden neo-section"
+      className="relative w-full py-8 lg:py-12 bg-[#F8F5F2] overflow-hidden neo-section"
     >
       <div className="px-6 lg:px-[7vw]">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-          
-          {/* Chief's Left Text Block */}
-          <div>
-            {/* Chief's Eyebrow */}
-            <div
-              className={`transition-all duration-700 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-            >
-              <span className="text-xs uppercase tracking-[0.2em] text-[#8B7D6F] font-medium">
-                Tentang Kami
-              </span>
-            </div>
+        {/* Eyebrow full-width */}
+        <div className={`mb-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <span className="text-xs uppercase tracking-[0.2em] text-[#8B7D6F] font-medium">
+            Tentang Kami
+          </span>
+        </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+
+          {/* Chief's Left Text Block */}
+          <div className="lg:col-span-2">
             {/* Chief's Headline */}
             <div
-              className={`flex flex-wrap items-start gap-3 mt-4 mb-6
-                transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              className={`mb-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
               style={{ transitionDelay: '100ms' }}
             >
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2D2420] leading-tight">
                 UPTD Puskesmas{' '}
                 <span className="text-[#C9A87C]">Poned Balowerti</span>
               </h2>
+            </div>
 
-              {/* Paripurna Badge */}
-              <div className="flex-shrink-0 mt-1 sm:mt-2">
-                <div
-                  className="inline-flex flex-col items-center px-3 py-2 rounded-2xl border"
-                  style={{
-                    background: 'linear-gradient(135deg,#2D2420 0%,#1C1917 100%)',
-                    borderColor: 'rgba(201,168,124,0.35)',
-                    boxShadow: '0 4px 16px rgba(201,168,124,0.2)',
-                  }}
-                >
-                  <div className="flex gap-0.5 mb-1">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-3 h-3" viewBox="0 0 24 24" fill="#F4C430">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                      </svg>
-                    ))}
-                  </div>
-                  <span className="text-[9px] font-bold tracking-[0.15em] uppercase" style={{ color: '#C9A87C' }}>
-                    Paripurna
-                  </span>
+            {/* Paripurna Badge */}
+            <div className={`mb-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              style={{ transitionDelay: '150ms' }}>
+              <div
+                className="inline-flex flex-col items-center px-3 py-2 rounded-2xl border"
+                style={{
+                  background: 'linear-gradient(135deg,#2D2420 0%,#1C1917 100%)',
+                  borderColor: 'rgba(201,168,124,0.35)',
+                  boxShadow: '0 4px 16px rgba(201,168,124,0.2)',
+                }}
+              >
+                <div className="flex gap-0.5 mb-1">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-3 h-3" viewBox="0 0 24 24" fill="#F4C430">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  ))}
                 </div>
+                <span className="text-[9px] font-bold tracking-[0.15em] uppercase" style={{ color: '#C9A87C' }}>
+                  Paripurna
+                </span>
               </div>
             </div>
 
-            {/* Chief's Body Text */}
-            <p
-              className={`text-base lg:text-lg text-[#8B7D6F] leading-relaxed mb-8 max-w-xl
-                transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-              style={{ transitionDelay: '200ms' }}
-            >
-              Kami menyediakan layanan kesehatan primer dan rujukan bagi warga Kediri dan sekitarnya—dengan tenaga medis yang berpengalaman dan fasilitas yang nyaman.
-            </p>
+            {/* Prakata */}
+            <div className="space-y-3 mb-4 text-sm lg:text-base text-[#8B7D6F] leading-relaxed">
+              <p>Puskesmas Balowerti adalah fasilitas kesehatan tingkat pertama milik Pemerintah Kota Kediri yang melayani masyarakat wilayah Balowerti dan sekitarnya.</p>
+              <p>Dengan status <strong className="text-[#2D2420]">PONED</strong> (Pelayanan Obstetri Neonatal Esensial Dasar), kami siap menangani persalinan dan kegawatdaruratan ibu serta bayi baru lahir selama 24 jam.</p>
+              <p>Berbekal akreditasi <strong className="text-[#2D2420]">Paripurna</strong> — predikat tertinggi dalam standar nasional — kami berkomitmen menghadirkan layanan kesehatan yang prima, ramah, dan terpercaya bagi seluruh lapisan masyarakat Kota Kediri.</p>
+            </div>
 
             {/* Chief's CTA Link */}
             <a
@@ -125,43 +98,11 @@ const About = () => {
             </a>
           </div>
 
-          {/* Chief's Stats Card */}
-          <div
-            className={`lg:mt-8 transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
-            }`}
-            style={{ transitionDelay: '200ms' }}
-          >
-            <div className="frosted-glass rounded-[28px] p-8 neo-card">
-              <div className="grid grid-cols-3 gap-6">
-                {stats.map((stat, index) => (
-                  <div
-                    key={stat.label}
-                    className="text-center"
-                    style={{ transitionDelay: `${300 + index * 100}ms` }}
-                  >
-                    <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#FAF3EB] flex items-center justify-center neo-inset">
-                      <stat.icon className="w-5 h-5 text-[#C9A87C]" />
-                    </div>
-                    <p className="text-2xl lg:text-3xl font-bold text-[#2D2420] font-['Playfair_Display']">
-                      {stat.value}
-                    </p>
-                    <p className="text-xs uppercase tracking-wider text-[#8B7D6F] mt-1">
-                      {stat.label}
-                    </p>
-                    <p className="text-xs text-[#8B7D6F] mt-1 hidden sm:block">
-                      {stat.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Chief's Real Puskesmas Balowerti Image */}
         <div
-          className={`mt-16 lg:mt-24 transition-all duration-1000 ${
+          className={`mt-6 lg:mt-8 transition-all duration-1000 ${
             isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-[1.02]'
           }`}
           style={{ transitionDelay: '400ms' }}

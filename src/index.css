@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=DM+Sans:wght@400;500;600&display=swap');
 
 @layer base {
   :root {
@@ -46,7 +46,7 @@
   
   /* Prevent layout shifts during interactions */
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     overflow-x: hidden;
   }
   
@@ -350,9 +350,9 @@
   transform: rotateY(-5deg) rotateX(5deg);
 }
 
-/* Chief's Smooth Scroll */
+/* Chief's Smooth Scroll — dihandle JS untuk offset navbar yang akurat */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 /* Chief's Selection Color */
@@ -387,6 +387,58 @@ html {
 
 .blur-load.loaded {
   filter: blur(0);
+}
+
+/* ── Staggered Section Reveal ───────────────────────────────── */
+/* Sections masuk dari bawah (default), kiri, atau kanan */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(48px);
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+[data-reveal='left'] {
+  transform: translateX(-56px);
+}
+
+[data-reveal='right'] {
+  transform: translateX(56px);
+}
+
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* Stagger anak-anak di dalam section */
+[data-reveal-children] > * {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+[data-reveal-children].revealed > *:nth-child(1) { transition-delay: 0ms; }
+[data-reveal-children].revealed > *:nth-child(2) { transition-delay: 80ms; }
+[data-reveal-children].revealed > *:nth-child(3) { transition-delay: 160ms; }
+[data-reveal-children].revealed > *:nth-child(4) { transition-delay: 240ms; }
+[data-reveal-children].revealed > *:nth-child(5) { transition-delay: 320ms; }
+[data-reveal-children].revealed > *:nth-child(6) { transition-delay: 400ms; }
+[data-reveal-children].revealed > * { opacity: 1; transform: translateY(0); }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal-children] > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* Chief's Layout Containment - Prevent shifts */

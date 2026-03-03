@@ -174,7 +174,8 @@ const Footer = () => {
               © {new Date().getFullYear()} UPTD Puskesmas Poned Balowerti. All rights reserved.
             </p>
             <p className="text-xs text-[#8B7D6F] mt-2">
-              Dinas Kesehatan Kota Kediri
+              Dinas Kesehatan Kota Kediri · Architecture & Developed by{' '}
+              <span className="text-[#C9A87C] font-medium">Sentra Mitra Design</span>
             </p>
           </div>
         </div>
