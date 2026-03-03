@@ -1,0 +1,227 @@
+# ============================================================
+# ci.yml — GitHub Actions CI/CD Pipeline
+# Puskesmas Balowerti Premium Healthcare Platform
+# Architecture & Built by Claudesy
+# Author: dr. Ferdi Iskandar / Claudesy
+# Date: 2026-03-03
+#
+# Pipeline stages:
+#   1. Quality Gate  — TypeScript check + ESLint + npm audit
+#   2. Build         — Vite production build
+#   3. Lighthouse CI — Performance + Accessibility + SEO scores
+#   4. Deploy        — Railway deployment (production on master)
+# ============================================================
+
+name: CI/CD — Puskesmas Balowerti
+
+on:
+  push:
+    branches: [master, main, "feature/**", "fix/**"]
+  pull_request:
+    branches: [master, main]
+
+# Prevent duplicate runs on PR + push
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "9"
+
+jobs:
+  # ─────────────────────────────────────────────────────────
+  # Job 1: Quality Gate
+  # Runs: TypeScript, ESLint, npm security audit
+  # ─────────────────────────────────────────────────────────
+  quality:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit
+        # Fails CI if any TypeScript errors exist
+
+      - name: ESLint check
+        run: npm run lint
+        # Fails CI on ESLint errors (not warnings)
+
+      - name: Security audit (npm)
+        run: npm audit --audit-level=high
+        # Fails CI on high or critical vulnerabilities
+        continue-on-error: false
+
+  # ─────────────────────────────────────────────────────────
+  # Job 2: Build
+  # Runs: Vite production build
+  # ─────────────────────────────────────────────────────────
+  build:
+    name: Production Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: quality
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Build application
+        run: npm run build
+        env:
+          # Inject non-secret build-time vars
+          VITE_APP_VERSION: ${{ github.sha }}
+
+      - name: Verify build output
+        run: |
+          test -d dist && echo "✅ dist/ exists" || (echo "❌ dist/ missing" && exit 1)
+          test -f dist/index.html && echo "✅ index.html exists" || (echo "❌ index.html missing" && exit 1)
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.sha }}
+          path: dist/
+          retention-days: 7
+
+  # ─────────────────────────────────────────────────────────
+  # Job 3: Lighthouse CI
+  # Runs: Performance, Accessibility, SEO audits
+  # ─────────────────────────────────────────────────────────
+  lighthouse:
+    name: Lighthouse Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: build
+    # Run on PRs and master only (not all feature branches)
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-${{ github.sha }}
+          path: dist/
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.14.x
+
+      - name: Run Lighthouse CI
+        run: lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        # Configuration loaded from .lighthouserc.json
+
+  # ─────────────────────────────────────────────────────────
+  # Job 4: Deploy to Railway
+  # Runs: Only on push to master
+  # ─────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [quality, build]
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    environment:
+      name: production
+      url: https://puskesmasbalowerti.id
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --service puskesmas-frontend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Deployment notification
+        if: success()
+        run: |
+          echo "✅ Deployment successful to production"
+          echo "🌐 URL: https://puskesmasbalowerti.id"
+          echo "📦 Commit: ${{ github.sha }}"
+          echo "👤 Deployed by: ${{ github.actor }}"
+          echo "🏥 Architecture & Built by Claudesy"
+
+  # ─────────────────────────────────────────────────────────
+  # Job 5: Sync Google Reviews (Weekly schedule)
+  # ─────────────────────────────────────────────────────────
+  sync-reviews:
+    name: Sync Google Reviews
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Sync Google Reviews
+        run: npm run sync:reviews
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          GOOGLE_PLACE_QUERY: ${{ vars.GOOGLE_PLACE_QUERY }}
+
+      - name: Commit updated reviews
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/google-reviews.json
+          git diff --staged --quiet || git commit -m "chore: sync Google Reviews [skip ci]"
+          git push
+
+# ─────────────────────────────────────────────────────────────
+# Scheduled triggers
+# ─────────────────────────────────────────────────────────────
+# To add weekly review sync, add this to the `on:` section:
+#   schedule:
+#     - cron: '0 2 * * 1'  # Every Monday at 02:00 UTC

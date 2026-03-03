@@ -1,0 +1,107 @@
+# ============================================================
+# .gitignore — Puskesmas Balowerti Platform
+# Architecture & Built by Claudesy
+# ============================================================
+
+# ── Environment Files (NEVER commit these) ──────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ── Build Outputs ─────────────────────────────────────────────
+dist/
+dist-ssr/
+build/
+out/
+
+# ── Dependencies ──────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ── Package Manager Caches ────────────────────────────────────
+.npm/
+.yarn/
+.pnpm-store/
+.bun/
+
+# ── Testing ───────────────────────────────────────────────────
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+*.lcov
+
+# ── IDE and Editor Files ──────────────────────────────────────
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Keep recommended VS Code extensions config
+!.vscode/extensions.json
+
+# ── TypeScript ────────────────────────────────────────────────
+*.tsbuildinfo
+
+# ── Logs ──────────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+bun-debug.log*
+
+# ── Security / Secrets ────────────────────────────────────────
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+secrets/
+.secrets/
+
+# ── Docker ────────────────────────────────────────────────────
+# Keep Dockerfile and docker-compose in repo
+# Ignore local Docker data volumes if mounted
+docker-volumes/
+
+# ── Generated Reports (Phase 2) ──────────────────────────────
+storage/reports/
+*.pdf
+*.xlsx
+
+# Except documentation PDFs in docs/ folder
+!docs/**/*.pdf
+
+# ── OS Files ──────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── Storybook (if added) ─────────────────────────────────────
+storybook-static/
+
+# ── Playwright (E2E tests) ───────────────────────────────────
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# ── Vite ──────────────────────────────────────────────────────
+.vite/
+
+# ── Railway ───────────────────────────────────────────────────
+.railway/

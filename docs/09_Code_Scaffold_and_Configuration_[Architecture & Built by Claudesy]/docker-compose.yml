@@ -1,0 +1,133 @@
+# ============================================================
+# docker-compose.yml — Puskesmas Balowerti Platform
+# Architecture & Built by Claudesy
+# Author: dr. Ferdi Iskandar / Claudesy
+# Date: 2026-03-03
+#
+# Usage:
+#   Development:   docker compose --profile dev up
+#   Production:    docker compose up -d
+#   Phase 2 full:  docker compose --profile phase2 up -d
+# ============================================================
+
+version: "3.9"
+
+# ── Shared Networks ────────────────────────────────────────
+networks:
+  puskesmas-net:
+    driver: bridge
+
+# ── Shared Volumes ─────────────────────────────────────────
+volumes:
+  postgres_data:
+    driver: local
+  reports_storage:
+    driver: local
+
+# ── Services ───────────────────────────────────────────────
+services:
+
+  # ── Phase 1: React SPA (static server) ─────────────────
+  app:
+    build:
+      context: ../../../
+      dockerfile: docs/09_Code_Scaffold_and_Configuration_[Architecture & Built by Claudesy]/Dockerfile
+    container_name: puskesmas-app
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ../../../.env
+    restart: unless-stopped
+    networks:
+      - puskesmas-net
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "com.puskesmas.service=frontend"
+      - "com.puskesmas.brand=Architecture & Built by Claudesy"
+
+  # ── Development server (hot reload) ────────────────────
+  dev:
+    image: node:20-alpine
+    container_name: puskesmas-dev
+    profiles: ["dev"]
+    working_dir: /app
+    volumes:
+      - ../../../:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ../../../.env
+    command: npm run dev -- --host 0.0.0.0
+    networks:
+      - puskesmas-net
+
+  # ── Phase 2: PostgreSQL Database ───────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: puskesmas-db
+    profiles: ["phase2"]
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-puskesmas_balowerti}
+      POSTGRES_USER: ${POSTGRES_USER:-puskesmas_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - puskesmas-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-puskesmas_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Phase 2: Backend API ───────────────────────────────
+  api:
+    image: node:20-alpine
+    container_name: puskesmas-api
+    profiles: ["phase2"]
+    working_dir: /app
+    volumes:
+      - ../../../api:/app
+      - reports_storage:/app/storage/reports
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    env_file:
+      - ../../../.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: node dist/server.js
+    restart: unless-stopped
+    networks:
+      - puskesmas-net
+
+  # ── Phase 2: pgAdmin (database management UI) ──────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: puskesmas-pgadmin
+    profiles: ["dev-phase2"]
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@puskesmasbalowerti.id}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:?PGADMIN_PASSWORD is required}
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - puskesmas-net
