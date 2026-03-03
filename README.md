@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏥 Puskesmas PONED Balowerti Kediri
+# Puskesmas PONED Balowerti Kediri
 ### Public-Facing Website
 
 **A modern, fully static single-page application for UPTD Puskesmas PONED Balowerti — a primary healthcare clinic (Puskesmas with PONED capability) located in Kediri, East Java, Indonesia.**
@@ -11,7 +11,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Railway](https://img.shields.io/badge/Deployed_on-Railway-0B0D0E?style=flat-square&logo=railway&logoColor=white)](https://railway.app/)
 
-🌐 **Live:** [puskesmas-website-production.up.railway.app](https://puskesmas-website-production.up.railway.app)
+**Live:** [puskesmas-website-production.up.railway.app](https://puskesmas-website-production.up.railway.app)
 
 <img src="./public/site.png" alt="Puskesmas PONED Balowerti Website Preview" width="900" />
 
@@ -27,7 +27,7 @@ Built as a purely static, client-rendered SPA, it is deployed to Railway via a l
 
 ---
 
-## ✨ Features
+## Features
 
 The website is organized into a seamless, scroll-driven single-page experience with the following sections:
 
@@ -110,7 +110,7 @@ The website is organized into a seamless, scroll-driven single-page experience w
 
                         ---
 
-                        ## 🚀 Getting Started
+                        ## Getting Started
 
                         ### Prerequisites
 
@@ -155,7 +155,7 @@ The website is organized into a seamless, scroll-driven single-page experience w
                             >
                             > ---
                             >
-                            > ## 📜 Available Scripts
+                            > ## Available Scripts
                             >
                             > | Command | Description |
                             > |---|---|
@@ -169,7 +169,7 @@ The website is organized into a seamless, scroll-driven single-page experience w
                             > >
                             > > ---
                             > >
-                            > > ## 🏗️ Architecture
+                            > > ## Architecture
                             > >
                             > > ### Single-Page Scroll Architecture
                             > >
@@ -221,7 +221,7 @@ The website is organized into a seamless, scroll-driven single-page experience w
                             > >
                             > > ---
                             > >
-                            > > ## 🎨 Design System
+                            > > ## Design System
                             > >
                             > > - **Color Palette:** Cream-based with primary accent `#C9A87C` (warm gold). All core colors are defined as HSL CSS variables in `:root` within `index.css`.
                             > > - - **Custom Utility Classes:** `.neo-card`, `.neo-card-hover`, `.neo-control`, `.neo-inset`, `.neo-chip`, `.frosted-glass`, `.grain-overlay`
@@ -231,7 +231,7 @@ The website is organized into a seamless, scroll-driven single-page experience w
                             > >        
                             > >         - ---
                             > >
-                            > > ## 🔧 Code Conventions
+                            > > ## Code Conventions
                             > >
                             > > ### File Naming
                             > > - Section & component files: `PascalCase` (e.g., `Hero.tsx`, `PatientFlow.tsx`)
@@ -266,7 +266,7 @@ The website is organized into a seamless, scroll-driven single-page experience w
                             > >  
                             > >   - ---
                             > >
-                            > > ## ⚠️ Known Gotchas
+                            > > ## Known Gotchas
                             > >
                             > > - **Lenis Bridge Pattern** — `App.tsx` exposes the Lenis instance to `window.__lenis`. The `LenisBridge` component must not be removed, as the global anchor handler in `main.tsx` depends on it.
                             > > - - **Reveal Animation Timing** — The `IntersectionObserver` in `main.tsx` initializes after a `requestAnimationFrame` + `setTimeout(100ms)` delay to ensure React's first render is complete before observing elements.
@@ -276,7 +276,7 @@ The website is organized into a seamless, scroll-driven single-page experience w
                             > >        
                             > >         - ---
                             > >
-                            > > ## 📄 Related Documentation
+                            > > ## Related Documentation
                             > >
                             > > - [`SERVER_GUIDE.md`](./SERVER_GUIDE.md) — Server setup and deployment guide
                             > > - - [`CLAUDE.md`](./CLAUDE.md) — AI assistant context file for codebase understanding
@@ -284,7 +284,7 @@ The website is organized into a seamless, scroll-driven single-page experience w
                             > >    
                             > >     - ---
                             > >
-                            > > ## 📋 Prerequisites Summary
+                            > > ## Prerequisites Summary
                             > >
                             > > | Tool | Version |
                             > > |---|---|
