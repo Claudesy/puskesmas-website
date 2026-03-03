@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Clock, Users, MapPin } from 'lucide-react';
+import { SITE_INFO } from '@/config/site';
 
 const About = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -21,7 +22,7 @@ const About = () => {
 
   const stats = [
     { icon: Clock, value: '24', unit: 'JAM', label: 'Layanan IGD & Rawat Inap' },
-    { icon: Users, value: '80+', unit: 'TENAGA', label: 'Medis & Paramedis' },
+    { icon: Users, value: '80+', unit: 'NAKES', label: 'Dokter, Perawat, Bidan & Tenaga Kesehatan' },
     { icon: MapPin, value: '5', unit: 'WILAYAH', label: 'Area Kerja' },
   ];
 
@@ -29,12 +30,13 @@ const About = () => {
     <section
       ref={sectionRef}
       id="about"
-      className="relative w-full py-14 lg:py-20 bg-[#F8F5F2] overflow-hidden neo-section"
+      className="relative w-full pb-14 lg:pb-20 bg-[#F8F5F2] overflow-hidden"
+      style={{ paddingTop: '60px' }}
     >
       <div className="px-6 lg:px-[7vw]">
 
         {/* Eyebrow */}
-        <div className={`mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className={`mb-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <span className="text-xs uppercase tracking-[0.2em] text-[#8B7D6F] font-medium">
             Tentang Kami
           </span>
@@ -95,8 +97,8 @@ const About = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-[#2D2420]/40 via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6 lg:bottom-8 lg:left-8">
               <div className="frosted-glass rounded-xl px-5 py-4 neo-card">
-                <p className="text-lg font-bold text-[#2D2420] font-['Playfair_Display']">Puskesmas Balowerti</p>
-                <p className="text-sm text-[#8B7D6F]">Jl. Balowerti GG V No 68, Kediri</p>
+                <p className="text-lg font-bold text-[#2D2420]">Puskesmas Balowerti</p>
+                <p className="text-sm text-[#8B7D6F]">{SITE_INFO.address}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <div className="w-2 h-2 rounded-full bg-[#C9A87C] animate-pulse" />
                   <span className="text-xs text-[#C9A87C] font-medium">Pemerintah Kota Kediri - Dinas Kesehatan</span>

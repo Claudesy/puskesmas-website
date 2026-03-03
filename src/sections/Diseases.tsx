@@ -298,7 +298,7 @@ const Diseases = () => {
                       <span className="text-[10px] font-bold mt-0.5 w-5 text-right flex-shrink-0" style={{ color: `${cat.color}99` }}>
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <span className="text-sm text-[#3D3028] leading-relaxed group-hover:text-[#2D2420] transition-colors" style={{ fontFamily: "'Georgia', serif" }}>
+                      <span className="text-sm text-[#3D3028] leading-relaxed group-hover:text-[#2D2420] transition-colors">
                         {disease}
                       </span>
                     </li>
@@ -328,7 +328,7 @@ const Diseases = () => {
                         <span className="text-[10px] font-bold mt-0.5 w-5 text-right flex-shrink-0" style={{ color: `${cat.color}99` }}>
                           {String(leftPage.length + i + 1).padStart(2, '0')}
                         </span>
-                        <span className="text-sm text-[#3D3028] leading-relaxed group-hover:text-[#2D2420] transition-colors" style={{ fontFamily: "'Georgia', serif" }}>
+                        <span className="text-sm text-[#3D3028] leading-relaxed group-hover:text-[#2D2420] transition-colors">
                           {disease}
                         </span>
                       </li>

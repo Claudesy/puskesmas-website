@@ -11,10 +11,10 @@ interface NavLink {
 }
 
 interface FloatingHeaderProps {
-  crewPortalUrl?: string;
+  crewPortalUrl?: string | null;
 }
 
-export function FloatingHeader({ crewPortalUrl = 'http://localhost:3000' }: FloatingHeaderProps) {
+export function FloatingHeader({ crewPortalUrl }: FloatingHeaderProps) {
   const [open, setOpen] = React.useState(false);
 
   const navLinks: NavLink[] = [
@@ -53,7 +53,7 @@ export function FloatingHeader({ crewPortalUrl = 'http://localhost:3000' }: Floa
           <div className="w-9 h-9 rounded-full overflow-hidden border border-[#C9A87C]/30 flex-shrink-0">
             <img src="/images/logookm.png" alt="Logo Puskesmas" className="w-full h-full object-cover" />
           </div>
-          <span className="font-bold text-sm font-['Playfair_Display'] text-[#2D2420] hidden sm:block">
+          <span className="font-bold text-sm text-[#2D2420] hidden sm:block">
             Puskesmas Balowerti
           </span>
         </a>
@@ -65,7 +65,7 @@ export function FloatingHeader({ crewPortalUrl = 'http://localhost:3000' }: Floa
               key={link.label}
               href={link.href}
               onClick={(e) => handleNavClick(e, link.href, link.external)}
-              className="font-['DM_Sans'] font-medium tracking-[0.04em] text-[13px] text-[#2D2420] px-4 py-1.5 rounded-full bg-transparent hover:bg-[#FAF3EB] hover:text-[#C9A87C] border border-transparent hover:border-[#EADDCB] transition-all duration-200"
+              className="font-medium tracking-[0.04em] text-[13px] text-[#2D2420] px-4 py-1.5 rounded-full bg-transparent hover:bg-[#FAF3EB] hover:text-[#C9A87C] border border-transparent hover:border-[#EADDCB] transition-all duration-200"
             >
               {link.label}
             </a>
@@ -93,17 +93,19 @@ export function FloatingHeader({ crewPortalUrl = 'http://localhost:3000' }: Floa
             ))}
           </div>
 
-          <a
-            href={crewPortalUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              buttonVariants({ size: 'sm' }),
-              'hidden lg:inline-flex bg-[#C9A87C] hover:bg-[#B8956A] text-white border-none rounded-full px-4'
-            )}
-          >
-            Crew Portal
-          </a>
+          {crewPortalUrl && (
+            <a
+              href={crewPortalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                buttonVariants({ size: 'sm' }),
+                'hidden lg:inline-flex bg-[#C9A87C] hover:bg-[#B8956A] text-white border-none rounded-full px-4'
+              )}
+            >
+              Crew Portal
+            </a>
+          )}
 
           {/* Mobile menu */}
           <Sheet open={open} onOpenChange={setOpen}>
@@ -123,7 +125,7 @@ export function FloatingHeader({ crewPortalUrl = 'http://localhost:3000' }: Floa
               <div className="flex items-center gap-3 px-4 pt-6 pb-4 border-b border-[#FAF3EB]">
                 <img src="/images/logookm.png" alt="Logo" className="w-10 h-10 rounded-full" />
                 <div>
-                  <p className="font-bold text-[#2D2420] text-sm font-['Playfair_Display']">Puskesmas Balowerti</p>
+                  <p className="font-bold text-[#2D2420] text-sm">Puskesmas Balowerti</p>
                   <img src="/images/logokediri.png" alt="Kota Kediri" className="h-5 w-auto mt-1" />
                 </div>
               </div>
@@ -134,7 +136,7 @@ export function FloatingHeader({ crewPortalUrl = 'http://localhost:3000' }: Floa
                     key={link.label}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href, link.external)}
-                    className={cn(buttonVariants({ variant: 'ghost', className: 'justify-start text-[#2D2420]' }), "font-['DM_Sans'] font-medium tracking-[0.04em]")}
+                    className={cn(buttonVariants({ variant: 'ghost', className: 'justify-start text-[#2D2420]' }), 'font-medium tracking-[0.04em]')}
                   >
                     {link.label}
                   </a>
@@ -156,14 +158,16 @@ export function FloatingHeader({ crewPortalUrl = 'http://localhost:3000' }: Floa
                     </a>
                   ))}
                 </div>
-                <a
-                  href={crewPortalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(buttonVariants({ size: 'sm' }), 'bg-[#C9A87C] hover:bg-[#B8956A] text-white rounded-full flex-1')}
-                >
-                  Crew Portal
-                </a>
+                {crewPortalUrl && (
+                  <a
+                    href={crewPortalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(buttonVariants({ size: 'sm' }), 'bg-[#C9A87C] hover:bg-[#B8956A] text-white rounded-full flex-1')}
+                  >
+                    Crew Portal
+                  </a>
+                )}
               </SheetFooter>
             </SheetContent>
           </Sheet>

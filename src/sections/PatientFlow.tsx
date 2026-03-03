@@ -71,12 +71,12 @@ const IconHome = () => (
 );
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 10, filter: "blur(8px)" },
+  hidden: { opacity: 0, y: 14, filter: "blur(10px)" },
   show: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: { type: "spring" as const, stiffness: 240, damping: 22 },
+    transition: { type: "spring" as const, stiffness: 170, damping: 26 },
   },
 };
 
@@ -104,7 +104,7 @@ const PatientFlow = () => {
       current++;
       setActive(current);
       if (current >= 8) clearInterval(interval);
-    }, 900);
+    }, 1200);
     return () => clearInterval(interval);
   }, [isVisible]);
 
@@ -158,12 +158,13 @@ const PatientFlow = () => {
   const a = steps[activeIdx];
 
   return (
-    <section ref={sectionRef} id="patient-flow" className="relative w-full py-14 lg:py-20 bg-[#F8F5F2] overflow-hidden neo-section text-black/80">
+    <section ref={sectionRef} id="patient-flow" className="relative w-full py-16 lg:py-24 overflow-hidden neo-section text-black/80">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(201,168,124,0.12),transparent_46%),radial-gradient(circle_at_82%_74%,rgba(121,95,74,0.1),transparent_52%),linear-gradient(180deg,#f9f6f2_0%,#f6f1ea_100%)]" />
       {/* background rings */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full border border-black/5" />
-        <div className="absolute -right-20 -top-20 h-[380px] w-[380px] rounded-full border border-black/5" />
-        <div className="absolute -left-40 -bottom-40 h-[520px] w-[520px] rounded-full border border-black/5" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -right-36 -top-24 h-[500px] w-[500px] rounded-full border border-[#C9A87C]/18" />
+        <div className="absolute -right-14 -top-8 h-[320px] w-[320px] rounded-full border border-[#C9A87C]/14" />
+        <div className="absolute -left-36 -bottom-24 h-[500px] w-[500px] rounded-full border border-[#B59066]/12" />
       </div>
 
       <div className="relative px-6 lg:px-[7vw]">
@@ -171,19 +172,21 @@ const PatientFlow = () => {
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={reduce ? undefined : { opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 220, damping: 22 }}
+          transition={{ type: "spring", stiffness: 160, damping: 28 }}
           className="flex flex-col gap-4 mb-10"
         >
-          <div className="text-xs uppercase tracking-[0.2em] text-[#8B7D6F] font-medium">Alur Pelayanan BPJS</div>
+          <div className="w-fit rounded-full border border-[#E8D9C4] bg-white/70 px-4 py-1.5 text-[11px] uppercase tracking-[0.22em] text-[#8B7D6F] font-medium shadow-sm">
+            Alur Pelayanan BPJS
+          </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2D2420] leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
             Berobat dengan{' '}
-            <span style={{ color: '#01934a' }}>BPJS</span>
+            <span className="bg-gradient-to-r from-[#B48754] via-[#C9A87C] to-[#8C6A47] bg-clip-text text-transparent">BPJS</span>
           </h2>
           <div className="flex flex-wrap items-center gap-2 text-sm text-black/55">
-            <span className="rounded-full border border-black/10 bg-white/50 px-3 py-1 backdrop-blur">
+            <span className="rounded-full border border-[#E3D2BC] bg-white/70 px-3 py-1 backdrop-blur">
               🪪 Kartu BPJS (fisik / Mobile JKN)
             </span>
-            <span className="rounded-full border border-black/10 bg-white/50 px-3 py-1 backdrop-blur">
+            <span className="rounded-full border border-[#E3D2BC] bg-white/70 px-3 py-1 backdrop-blur">
               🆔 KTP
             </span>
             <span className="ml-auto hidden text-xs text-black/40 md:block">
@@ -193,19 +196,19 @@ const PatientFlow = () => {
         </motion.div>
 
         {/* Layout */}
-        <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-[320px_1fr]">
+        <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-[340px_1fr]">
           {/* Timeline */}
           <div className="relative">
-            <div className="sticky top-10">
+            <div className="sticky top-20">
               <div className="relative pl-10">
                 {/* rail */}
-                <div className="absolute left-4 top-2 h-[calc(100%-8px)] w-px bg-black/10" />
+                <div className="absolute left-4 top-2 h-[calc(100%-8px)] w-px bg-[#D8C4A8]/75" />
 
                 {/* progress */}
                 <motion.div
-                  className="absolute left-4 top-2 w-px bg-emerald-600/60"
+                  className="absolute left-4 top-2 w-px bg-[#C9A87C]/90"
                   animate={reduce ? undefined : { height: `${(activeIdx / (steps.length - 1)) * 100}%` }}
-                  transition={{ type: "spring", stiffness: 200, damping: 26 }}
+                  transition={{ type: "spring", stiffness: 145, damping: 30 }}
                   style={{ height: `${(activeIdx / (steps.length - 1)) * 100}%` }}
                 />
 
@@ -217,13 +220,13 @@ const PatientFlow = () => {
                       initial={{ opacity: 0, y: 0 }}
                       animate={{ opacity: 1, y: activeIdx * 68 }}
                       exit={{ opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 240, damping: 24 }}
+                      transition={{ type: "spring", stiffness: 165, damping: 28 }}
                       className="absolute left-4 top-2 -translate-x-1/2"
                     >
                       <motion.span
-                        className="block h-3 w-3 rounded-full bg-emerald-600/70"
+                        className="block h-3 w-3 rounded-full bg-[#B48754]/80"
                         animate={{ scale: [1, 1.8, 1], opacity: [0.9, 0.35, 0.9] }}
-                        transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
                       />
                     </motion.div>
                   )}
@@ -237,24 +240,24 @@ const PatientFlow = () => {
                       <motion.button
                         key={s.id}
                         onClick={() => setActive(s.no)}
-                        whileHover={reduce ? undefined : { x: 4 }}
+                        whileHover={reduce ? undefined : { x: 2 }}
                         whileTap={reduce ? undefined : { scale: 0.99 }}
-                        className="group flex w-full items-center gap-3 rounded-2xl px-2 py-2 text-left"
+                        className="group flex w-full items-center gap-3 rounded-2xl border border-transparent px-2 py-2 text-left transition-colors hover:border-[#E6D8C4]/80 hover:bg-white/40"
                       >
                         <div className="relative">
                           <div className={[
                             "grid h-10 w-10 place-items-center rounded-full border",
                             isActive
-                              ? "border-emerald-600/40 bg-emerald-50 text-emerald-700"
+                              ? "border-[#C9A87C]/50 bg-[#F5EBDD] text-[#8E6841]"
                               : isDone
-                              ? "border-emerald-600/25 bg-emerald-50/60 text-emerald-700/70"
+                              ? "border-[#C9A87C]/30 bg-[#F8F0E4]/75 text-[#9A7450]"
                               : "border-black/10 bg-white/60 text-black/60",
                           ].join(" ")}>
                             {React.isValidElement(s.icon) ? (s.icon as React.ReactElement<{ children: React.ReactNode }>).props.children : s.icon}
                           </div>
                           <div className={[
                             "absolute -right-1.5 -top-1.5 grid h-5 w-5 place-items-center rounded-full text-[10px] font-semibold",
-                            isActive ? "bg-emerald-600 text-white" : "bg-black/5 text-black/55",
+                            isActive ? "bg-[#B48754] text-white" : "bg-black/5 text-black/55",
                           ].join(" ")}>
                             {s.no}
                           </div>
@@ -268,7 +271,7 @@ const PatientFlow = () => {
                               {s.title}
                             </div>
                             {isActive && (
-                              <span className="rounded-full border border-emerald-600/25 bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+                              <span className="rounded-full border border-[#C9A87C]/35 bg-[#F7EEDF] px-2 py-0.5 text-[10px] font-medium text-[#8E6841]">
                                 FOCUS
                               </span>
                             )}
@@ -284,13 +287,13 @@ const PatientFlow = () => {
                 {/* Controls */}
                 <div className="mt-6 flex items-center gap-2 pl-2">
                   <button
-                    className="rounded-full border border-black/10 bg-white/55 px-4 py-2 text-sm backdrop-blur hover:bg-white/75"
+                    className="rounded-full border border-[#DCC8AE] bg-white/70 px-4 py-2 text-sm backdrop-blur transition-colors hover:bg-white"
                     onClick={() => setActive((v) => Math.max(1, v - 1))}
                   >
                     Prev
                   </button>
                   <button
-                    className="rounded-full border border-black/10 bg-white/55 px-4 py-2 text-sm backdrop-blur hover:bg-white/75"
+                    className="rounded-full border border-[#DCC8AE] bg-white/70 px-4 py-2 text-sm backdrop-blur transition-colors hover:bg-white"
                     onClick={() => setActive((v) => Math.min(steps.length, v + 1))}
                   >
                     Next
@@ -302,9 +305,9 @@ const PatientFlow = () => {
 
           {/* Content panel */}
           <div>
-            <div className="relative overflow-hidden rounded-[28px] border border-black/10 bg-white/45 p-8 shadow-sm backdrop-blur">
+            <div className="relative overflow-hidden rounded-[30px] border border-[#E6D8C4] bg-white/70 p-8 shadow-[0_22px_56px_rgba(121,95,74,0.12)] backdrop-blur-xl">
               <div className="pointer-events-none absolute inset-0" style={{
-                background: "radial-gradient(900px circle at 15% 0%, rgba(16,185,129,0.16), transparent 55%), radial-gradient(900px circle at 80% 70%, rgba(0,0,0,0.05), transparent 55%)",
+                background: "radial-gradient(900px circle at 15% 0%, rgba(201,168,124,0.22), transparent 55%), radial-gradient(900px circle at 80% 70%, rgba(133,103,79,0.12), transparent 55%)",
               }} />
 
               <div className="relative">
@@ -313,10 +316,10 @@ const PatientFlow = () => {
                     <div className="text-xs font-semibold tracking-widest text-black/45">
                       STEP {String(a.no).padStart(2, "0")}
                     </div>
-                    <h3 className="mt-2 text-4xl font-semibold leading-tight tracking-tight text-black/85" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    <h3 className="mt-2 text-4xl font-semibold leading-tight tracking-tight text-[#2D2420]" style={{ fontFamily: "'Playfair Display', serif" }}>
                       {a.title}
                     </h3>
-                    <p className="mt-4 max-w-2xl text-base leading-relaxed text-black/60">{a.desc}</p>
+                    <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#5E5248]">{a.desc}</p>
                   </div>
 
                   <div className="hidden md:block">
@@ -324,8 +327,8 @@ const PatientFlow = () => {
                       key={a.id}
                       initial={reduce ? false : { opacity: 0, rotate: -6, scale: 0.98 }}
                       animate={reduce ? undefined : { opacity: 1, rotate: 0, scale: 1 }}
-                      transition={{ type: "spring", stiffness: 220, damping: 18 }}
-                      className="grid h-14 w-14 place-items-center rounded-2xl border border-black/10 bg-white/60 text-black/70"
+                      transition={{ type: "spring", stiffness: 150, damping: 24 }}
+                      className="grid h-14 w-14 place-items-center rounded-2xl border border-[#DFCBB2] bg-[#F8F1E6] text-[#8E6841]"
                     >
                       {React.isValidElement(a.icon) ? (a.icon as React.ReactElement<{ children: React.ReactNode }>).props.children : a.icon}
                     </motion.div>
@@ -335,7 +338,7 @@ const PatientFlow = () => {
                 <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
                   <motion.div variants={fadeUp} initial="hidden" animate="show" className="space-y-2">
                     <div className="text-xs font-semibold tracking-widest text-black/45">INFO</div>
-                    <div className="text-sm leading-relaxed text-black/55">
+                    <div className="text-sm leading-relaxed text-[#5E5248]">
                       Mitra resmi BPJS Kesehatan — melayani peserta Rawat Jalan & Rawat Inap. Siapkan dokumen sebelum datang.
                     </div>
                   </motion.div>
@@ -343,10 +346,10 @@ const PatientFlow = () => {
                   <motion.div variants={fadeUp} initial="hidden" animate="show" className="space-y-2">
                     <div className="text-xs font-semibold tracking-widest text-black/45">STATUS</div>
                     <div className="flex flex-wrap gap-2">
-                      <span className="rounded-full border border-black/10 bg-white/55 px-3 py-1 text-xs text-black/55">
+                      <span className="rounded-full border border-[#DCC8AE] bg-white/75 px-3 py-1 text-xs text-[#5E5248]">
                         Progress: {activeIdx + 1}/{steps.length}
                       </span>
-                      <span className="rounded-full border border-emerald-600/20 bg-emerald-50 px-3 py-1 text-xs text-emerald-700">
+                      <span className="rounded-full border border-[#C9A87C]/40 bg-[#F7EEDF] px-3 py-1 text-xs text-[#8E6841]">
                         {a.meta}
                       </span>
                     </div>
@@ -361,8 +364,8 @@ const PatientFlow = () => {
                       initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
                       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                       exit={{ opacity: 0, y: -10, filter: "blur(8px)" }}
-                      transition={{ type: "spring", stiffness: 220, damping: 22 }}
-                      className="mt-2 flex items-center justify-between rounded-2xl border border-black/10 bg-white/55 px-4 py-3"
+                      transition={{ type: "spring", stiffness: 160, damping: 26 }}
+                      className="mt-2 flex items-center justify-between rounded-2xl border border-[#DECAB0] bg-white/75 px-4 py-3"
                     >
                       <div className="min-w-0">
                         <div className="truncate text-sm font-semibold text-black/75">

@@ -35,26 +35,92 @@ document.addEventListener('click', (e) => {
 // ── Staggered Section Reveal ─────────────────────────────────
 // Single global IntersectionObserver untuk semua [data-reveal] & [data-reveal-children]
 function initRevealObserver() {
-  const targets = document.querySelectorAll('[data-reveal], [data-reveal-children]');
+  const targets = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-reveal], [data-reveal-children]')
+  );
   if (!targets.length) return;
+
+  targets.forEach((target, index) => {
+    if (target.style.getPropertyValue('--reveal-delay')) return;
+    const staggerDelay = Math.min(index * 70, 560);
+    target.style.setProperty('--reveal-delay', `${staggerDelay}ms`);
+  });
 
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
+          const target = entry.target as HTMLElement;
+          target.classList.add('reveal-in-view');
+          requestAnimationFrame(() => target.classList.add('revealed'));
           observer.unobserve(entry.target);
         }
       });
     },
-    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    { threshold: 0.18, rootMargin: '0px 0px -12% 0px' }
   );
 
   targets.forEach((el) => observer.observe(el));
 }
 
+// ── Magnetic CTA ─────────────────────────────────────────────
+// Aktif hanya untuk pointer device agar tidak ganggu touch interaction.
+function initMagneticCta() {
+  const supportsFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!supportsFinePointer) return;
+
+  const ctas = Array.from(document.querySelectorAll<HTMLElement>('[data-magnetic]'));
+  if (!ctas.length) return;
+
+  ctas.forEach((cta) => {
+    cta.classList.add('magnetic-cta');
+    let rafId = 0;
+    const strength = Number(cta.dataset.magneticStrength ?? 8);
+
+    const setAtRest = () => {
+      cta.classList.remove('magnetic-active');
+      cta.style.setProperty('--mx', '0px');
+      cta.style.setProperty('--my', '0px');
+      cta.style.setProperty('--ms', '1');
+    };
+
+    const onEnter = () => {
+      cta.classList.add('magnetic-active');
+      cta.style.setProperty('--ms', '1.012');
+    };
+
+    const onMove = (event: PointerEvent) => {
+      const rect = cta.getBoundingClientRect();
+      const offsetX = ((event.clientX - rect.left) / rect.width - 0.5) * strength * 2;
+      const offsetY = ((event.clientY - rect.top) / rect.height - 0.5) * strength * 2;
+
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        cta.style.setProperty('--mx', `${offsetX.toFixed(2)}px`);
+        cta.style.setProperty('--my', `${offsetY.toFixed(2)}px`);
+      });
+    };
+
+    const onLeave = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      setAtRest();
+    };
+
+    cta.addEventListener('pointerenter', onEnter);
+    cta.addEventListener('pointermove', onMove);
+    cta.addEventListener('pointerleave', onLeave);
+    cta.addEventListener('blur', onLeave);
+    cta.addEventListener('focus', onEnter);
+  });
+}
+
 // Jalankan setelah React selesai render pertama kali
-requestAnimationFrame(() => setTimeout(initRevealObserver, 100));
+requestAnimationFrame(() =>
+  setTimeout(() => {
+    initRevealObserver();
+    initMagneticCta();
+  }, 100)
+);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -205,7 +205,7 @@ const USG = () => {
                   }`}
                   style={{ transitionDelay: `${500 + idx * 100}ms` }}
                 >
-                  <p className="text-2xl font-bold text-[#C9A87C]" style={{ fontFamily: "'Playfair Display', serif" }}>{stat.value}</p>
+                  <p className="text-2xl font-bold text-[#C9A87C]">{stat.value}</p>
                   <p className="text-sm font-semibold text-[#2D2420]">{stat.label}</p>
                   <p className="text-xs text-[#8B7D6F]">{stat.desc}</p>
                 </div>

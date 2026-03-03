@@ -1,15 +1,12 @@
-// Chief's Reservation Section - Zen Queue System & Dynamic Wait-Time
+// Chief's Reservation Section - Zen Queue System & Informative Wait-Time
 
 import { useEffect, useRef, useState } from 'react';
 import { Calendar, Clock, User, Phone, CheckCircle2 } from 'lucide-react';
-
-const WA_NUMBER = '6285178922096';
+import { buildWhatsAppUrl, OPERATIONAL_HOURS, QUEUE_INFO } from '@/config/site';
 
 const Reservation = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [queueCount, setQueueCount] = useState(4);
-  const [waitTime, setWaitTime] = useState(15);
   const [nama, setNama] = useState('');
   const [noHp, setNoHp] = useState('');
   const [layanan, setLayanan] = useState('');
@@ -21,32 +18,16 @@ const Reservation = () => {
       alert('Mohon lengkapi semua field sebelum konfirmasi.');
       return;
     }
-    const msg = encodeURIComponent(
+    const msg =
       `Halo Puskesmas Balowerti, saya ingin reservasi:\n\n` +
       `👤 Nama: ${nama}\n` +
       `📞 No HP: ${noHp || '-'}\n` +
       `🏥 Layanan: ${layanan}\n` +
       `📅 Tanggal: ${tanggal}\n` +
       `⏰ Waktu: ${waktu}\n\n` +
-      `Mohon konfirmasinya. Terima kasih 🙏`
-    );
-    window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
+      `Mohon konfirmasinya. Terima kasih 🙏`;
+    window.open(buildWhatsAppUrl(msg), '_blank');
   }
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setQueueCount(prev => {
-        const change = Math.random() > 0.7 ? (Math.random() > 0.5 ? 1 : -1) : 0;
-        return Math.max(0, Math.min(10, prev + change));
-      });
-      setWaitTime(prev => {
-        const change = Math.random() > 0.8 ? (Math.random() > 0.5 ? 5 : -5) : 0;
-        return Math.max(5, Math.min(45, prev + change));
-      });
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -69,7 +50,7 @@ const Reservation = () => {
   const renderZenOrbs = () => {
     const orbs = [];
     const totalOrbs = 8;
-    const activeOrbs = Math.min(queueCount, totalOrbs);
+    const activeOrbs = QUEUE_INFO.realtimeEnabled ? 6 : 3;
     
     for (let i = 0; i < totalOrbs; i++) {
       const isActive = i < activeOrbs;
@@ -115,7 +96,7 @@ const Reservation = () => {
               
               <div className="absolute bottom-8 left-8 right-8">
                 <div className="frosted-glass rounded-2xl px-6 py-4 neo-card">
-                  <p className="text-lg font-bold text-[#2D2420] font-['Playfair_Display']">
+                  <p className="text-lg font-bold text-[#2D2420]">
                     Kesehatan Anda, Nafas Kami
                   </p>
                   <p className="text-sm text-[#8B7D6F] mt-1">
@@ -144,10 +125,10 @@ const Reservation = () => {
               </p>
               <div className="mt-4 flex flex-wrap gap-3">
                 <span className="inline-flex items-center gap-1.5 text-xs bg-[#FAF3EB] text-[#8B7D6F] px-3 py-1.5 rounded-full">
-                  🕐 Senin–Sabtu: 07:30–17:00
+                  🕐 {OPERATIONAL_HOURS.clinicCompact}
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-xs bg-red-50 text-red-500 px-3 py-1.5 rounded-full">
-                  🚨 UGD: 24 Jam
+                  🚨 {OPERATIONAL_HOURS.emergency}
                 </span>
               </div>
             </div>
@@ -253,6 +234,8 @@ const Reservation = () => {
 
               <button
                 onClick={handleReservasi}
+                data-magnetic
+                data-magnetic-strength="10"
                 className="w-full bg-[#C9A87C] hover:bg-[#B8956A] text-white font-medium py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#C9A87C]/20 neo-card-hover"
               >
                 <span>💬 Konfirmasi via WhatsApp</span>
@@ -270,7 +253,9 @@ const Reservation = () => {
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-[#C9A87C] animate-pulse" />
-                  <span className="text-sm font-medium text-[#C9A87C]">Tenang & Terkendali</span>
+                  <span className="text-sm font-medium text-[#C9A87C]">
+                    {QUEUE_INFO.realtimeEnabled ? 'Real-time' : 'Info Manual'}
+                  </span>
                 </div>
               </div>
 
@@ -279,16 +264,17 @@ const Reservation = () => {
                   {renderZenOrbs()}
                 </div>
                 <span className="text-sm text-[#8B7D6F]">
-                  Antrian poli umum: <span className="font-medium text-[#2D2420]">{queueCount} orang</span>
+                  Antrian poli umum: <span className="font-medium text-[#2D2420]">{QUEUE_INFO.queueSnapshot}</span>
                 </span>
               </div>
 
               <div className="flex items-center gap-3 pt-4 border-t border-[#FAF3EB]">
                 <Clock className="w-5 h-5 text-[#C9A87C]" />
                 <span className="text-sm text-[#8B7D6F]">
-                  Estimasi tunggu: <span className="font-medium text-[#2D2420]">{waitTime} menit</span>
+                  Estimasi tunggu: <span className="font-medium text-[#2D2420]">{QUEUE_INFO.waitEstimate}</span>
                 </span>
               </div>
+              <p className="text-xs text-[#8B7D6F] mt-2">{QUEUE_INFO.note}</p>
             </div>
           </div>
         </div>

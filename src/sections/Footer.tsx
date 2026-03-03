@@ -116,7 +116,9 @@ const Footer = () => {
           >
             <a
               href="#reservation"
-              className="inline-flex items-center gap-3 bg-[#C9A87C] hover:bg-[#B8956A] text-white font-medium text-lg px-10 py-5 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-[#C9A87C]/30 heartbeat group neo-card-hover"
+              data-magnetic
+              data-magnetic-strength="12"
+              className="inline-flex items-center gap-3 bg-[#C9A87C] hover:bg-[#B8956A] text-white font-medium text-lg px-10 py-5 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-[#C9A87C]/30 group neo-card-hover"
             >
               <Heart className="w-6 h-6 transition-transform group-hover:scale-110" />
               <span>Reservasi Sekarang</span>

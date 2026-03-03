@@ -1,457 +1,447 @@
-// Chief's Hero Section - The Digital Sanctuary Entry Point
-// Diagram-focused left panel (chat Abby sementara disembunyikan)
+// Hero Section - Efficient & Clean Design
+import { useState, useEffect, useRef } from 'react';
+import { Clock, MapPin, Video, Siren, ChevronDown, User, Phone, Calendar, Stethoscope, MessageCircle, Activity, Baby, FlaskConical, HeartPulse, Home, Microscope } from 'lucide-react';
+import { buildWhatsAppUrl, OPERATIONAL_HOURS } from '@/config/site';
 
-import { useEffect, useRef, useState } from 'react';
-import { Clock, ChevronDown, Phone, Ambulance, Stethoscope, X, MessageCircle } from 'lucide-react';
+type Mode = 'kunjungan' | 'telemedicine' | 'darurat';
 
-type DoctorSchedule = {
-  name: string;
-  poli: string;
-  layanan: string[];
-  shift: string;
-  avatar: string;
-};
-
-const doctorSchedules: DoctorSchedule[] = [
-  {
-    name: 'dr. Ferdi Iskandar',
-    poli: 'Poli Umum',
-    layanan: ['Poli Umum', 'KIA', 'VCT', 'Laboratorium'],
-    shift: 'Sen–Sab · 07.30–17.00',
-    avatar: '/images/ferdi.png',
-  },
-  {
-    name: 'dr. Cica Lusiana',
-    poli: 'Poli Lansia',
-    layanan: ['Poli Lansia'],
-    shift: 'Sen–Sab · 07.30–17.00',
-    avatar: '/images/cica.webp',
-  },
-  {
-    name: 'dr. Rachmad Juni T.',
-    poli: 'IGD',
-    layanan: ['IGD'],
-    shift: 'Sen–Sab · 07.30–17.00',
-    avatar: '/images/rachmad.png',
-  },
-  {
-    name: 'drg. Endah Retno W.',
-    poli: 'Poli Gigi',
-    layanan: ['Poli Gigi'],
-    shift: 'Sen–Sab · 07.30–17.00',
-    avatar: '/images/endah.avif',
-  },
+const doctors = [
+  { name: 'dr. Ferdi Iskandar', poli: 'Poli Umum', shift: OPERATIONAL_HOURS.doctorShift, img: '/images/ferdi.png' },
+  { name: 'dr. Cica Lusiana', poli: 'Poli Lansia', shift: OPERATIONAL_HOURS.doctorShift, img: '/images/cica.webp' },
+  { name: 'dr. Rachmad Juni T.', poli: 'IGD', shift: OPERATIONAL_HOURS.emergency, img: '/images/rachmad.png' },
+  { name: 'drg. Endah Retno W.', poli: 'Poli Gigi', shift: OPERATIONAL_HOURS.doctorShift, img: '/images/endah.avif' },
 ];
 
-const Hero = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [fabOpen, setFabOpen] = useState(false);
-  const [selectedLayanan, setSelectedLayanan] = useState('');
-  const [scheduleResults, setScheduleResults] = useState<DoctorSchedule[]>([]);
-  const [searched, setSearched] = useState(false);
-  const doctorMascotImage = `${import.meta.env.BASE_URL}images/doc.png`;
+const layananList = [
+  { id: 'Poli Umum', label: 'Poli Umum', icon: Stethoscope, desc: 'Pemeriksaan umum' },
+  { id: 'Poli Lansia', label: 'Poli Lansia', icon: HeartPulse, desc: 'Layanan lansia' },
+  { id: 'Poli Gigi', label: 'Poli Gigi', icon: Activity, desc: 'Kesehatan gigi' },
+  { id: 'KIA', label: 'KIA / Anak', icon: Baby, desc: 'Ibu & anak' },
+  { id: 'VCT', label: 'VCT', icon: Microscope, desc: 'Konseling & tes' },
+  { id: 'Laboratorium', label: 'Laboratorium', icon: FlaskConical, desc: 'Pemeriksaan lab' },
+  { id: 'IGD', label: 'IGD', icon: Home, desc: 'Gawat darurat' },
+];
+const poliList = [
+  { id: 'Poli Umum', label: 'Poli Umum', icon: Stethoscope, desc: 'Pemeriksaan umum' },
+  { id: 'Poli Gigi', label: 'Poli Gigi', icon: Activity, desc: 'Kesehatan gigi' },
+  { id: 'Poli Lansia', label: 'Poli Lansia', icon: HeartPulse, desc: 'Layanan lansia' },
+  { id: 'KIA / Anak', label: 'KIA / Anak', icon: Baby, desc: 'Ibu & anak' },
+  { id: 'Kesehatan Jiwa', label: 'Kesehatan Jiwa', icon: Microscope, desc: 'Konseling jiwa' },
+];
 
-  function handleCariJadwal() {
-    if (!selectedLayanan) {
-      setSearched(true);
-      setScheduleResults([]);
-      return;
-    }
-    const results = doctorSchedules.filter((d) =>
-      d.layanan.includes(selectedLayanan)
-    );
-    setScheduleResults(results);
-    setSearched(true);
-  }
+const waktuList = [
+  { id: '07:30 - 09:00', label: '07:30 - 09:00', icon: Clock, desc: 'Pagi awal' },
+  { id: '09:00 - 11:00', label: '09:00 - 11:00', icon: Clock, desc: 'Pagi' },
+  { id: '11:00 - 13:00', label: '11:00 - 13:00', icon: Clock, desc: 'Siang' },
+  { id: '13:00 - 15:00', label: '13:00 - 15:00', icon: Clock, desc: 'Sore awal' },
+  { id: '15:00 - 17:00', label: '15:00 - 17:00', icon: Clock, desc: 'Sore' },
+];
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
+export default function Hero() {
+  const [mode, setMode] = useState<Mode>('kunjungan');
+  const [loaded, setLoaded] = useState(false);
+  const [layanan, setLayanan] = useState('');
+  const [showDoctors, setShowDoctors] = useState(false);
+  
+  // Form states
+  const [form, setForm] = useState({ nama: '', hp: '', tanggal: '', waktu: '' });
+  const [tele, setTele] = useState({ nama: '', usia: '', hp: '', poli: '', keluhan: '' });
 
-  const nuraniWords = [
-    { text: 'Nyaman', position: 'right-[52vw] top-[10vh]', delay: 'delay-0' },
-    { text: 'Unggul', position: 'right-[48vw] bottom-[14vh]', delay: 'delay-100' },
-    { text: 'Ramah', position: 'right-[6vw] top-[14vh]', delay: 'delay-200' },
-    { text: 'Terkendali', position: 'right-[10vw] bottom-[10vh]', delay: 'delay-300' },
-  ];
-  const controlCallouts = [
-    {
-      title: 'Risiko Menurun',
-      detail: 'Kontrol berkala membantu cegah komplikasi.',
-      labelClass: 'bottom-[-28%] left-[0%] items-start text-left',
-      lineClass: 'bottom-[16%] left-[18%] w-14 rotate-[-12deg]',
-    },
-    {
-      title: 'Pemulihan Aman',
-      detail: 'Tindak lanjut membuat perawatan terkendali.',
-      labelClass: 'bottom-[-28%] left-[50%] -translate-x-1/2 items-center text-center',
-      lineClass: 'bottom-[16%] left-[47%] w-14 rotate-[0deg]',
-    },
-    {
-      title: 'Terapi Lebih Tepat',
-      detail: 'Rencana obat disesuaikan tiap progres.',
-      labelClass: 'bottom-[-28%] right-[0%] items-end text-right',
-      lineClass: 'bottom-[16%] right-[18%] w-14 rotate-[12deg]',
-    },
-  ];
+
+  useEffect(() => { setTimeout(() => setLoaded(true), 100); }, []);
+
+  const sendWA = (text: string) => window.open(buildWhatsAppUrl(text), '_blank');
+
+  const handleKunjungan = () => {
+    if (!form.nama || !form.hp || !form.tanggal || !form.waktu) return alert('Lengkapi data!');
+    sendWA(`*RESERVASI KUNJUNGAN*\n\nNama: ${form.nama}\nHP: ${form.hp}\nLayanan: ${layanan}\nTanggal: ${form.tanggal}\nWaktu: ${form.waktu}`);
+  };
+
+  const handleTele = () => {
+    if (!tele.nama || !tele.hp || !tele.keluhan) return alert('Lengkapi data!');
+    sendWA(`*TELEMEDICINE*\n\nNama: ${tele.nama}\nUsia: ${tele.usia}\nHP: ${tele.hp}\nPoli: ${tele.poli}\nKeluhan: ${tele.keluhan}`);
+  };
+
+
+
+  const TabButton = ({ id, icon: Icon, label, color }: { id: Mode; icon: any; label: string; color: string }) => (
+    <button
+      onClick={() => setMode(id)}
+      className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all ${
+        mode === id ? `${color} text-white shadow-lg` : 'text-[#8B7D6F] hover:text-[#2D2420]'
+      }`}
+    >
+      <Icon className="w-4 h-4" />
+      <span>{label}</span>
+    </button>
+  );
 
   return (
-    <section
-      ref={sectionRef}
-      id="hero"
-      className="relative w-full overflow-hidden bg-[#F8F5F2] neo-section"
-    >
-      {/* Chief's Cream Gradient Background */}
-      <div className="absolute inset-0 bg-cream-gradient pointer-events-none" />
-
+    <section id="hero" className="relative w-full bg-[#F8F5F2] overflow-hidden pt-24" style={{ paddingBottom: '80px' }}>
       {/* Grid Background */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
+      <div 
+        className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgba(201,168,124,0.08) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(201,168,124,0.08) 1px, transparent 1px),
-            radial-gradient(circle at 60% 40%, rgba(201,168,124,0.07) 0%, transparent 65%)
+            linear-gradient(to right, rgba(201,168,124,0.2) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(201,168,124,0.2) 1px, transparent 1px)
           `,
-          backgroundSize: '40px 40px, 40px 40px, 100% 100%',
+          backgroundSize: '50px 50px',
         }}
       />
-
-      
-      {/* Chief's NURANI Philosophy - Floating Text Elements */}
-      {nuraniWords.map((word, index) => (
-        <div
-          key={word.text}
-          className={`absolute ${word.position} float-gentle${index > 0 ? `-delay-${index}` : ''} 
-            transition-all duration-1000 ${isLoaded ? 'opacity-70' : 'opacity-0'}`}
-          style={{ transitionDelay: `${700 + index * 100}ms` }}
-        >
-          <span className="text-xs uppercase tracking-[0.2em] text-[#8B7D6F] font-medium">
-            {word.text}
-          </span>
-        </div>
-      ))}
-
-      {/* Chief's Main Content Container */}
-      <div className="relative z-10 flex items-start px-6 lg:px-[7vw] pt-44 pb-6">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-start">
-          
-          {/* Karakter dokter + garis tipis edukasi kontrol rutin */}
-          <div
-            className={`relative mx-auto lg:mx-0 w-full max-w-[640px] lg:w-[46vw]
-              transition-all duration-1000 ${
-                isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
-              }`}
-            style={{ transitionDelay: '150ms' }}
-          >
-            {/* Gambar dokter */}
-            <div className="relative aspect-[4/5] sm:aspect-[4/4] lg:aspect-[3/3]">
-              <div className="absolute inset-x-[4%] top-[0%] bottom-[10%] rounded-[34px] overflow-hidden bg-white/70 border border-[#EADDCB] shadow-[0_14px_32px_rgba(149,122,95,0.15)] float-gentle-delay-1">
-                <img
-                  src={doctorMascotImage}
-                  alt="Karakter Dokter"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-
-            {/* Callout row — 3 kolom rata di bawah gambar */}
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              {controlCallouts.map((callout, index) => (
-                <div
-                  key={callout.title}
-                  className="callout-label-motion space-y-0.5 pb-1 border-b border-[#C9A87C]/45"
-                  style={{ animationDelay: `${index * 0.3}s` }}
-                >
-                  <p className="text-xs uppercase tracking-[0.14em] text-[#A88A67] font-semibold leading-tight">
-                    {callout.title}
-                  </p>
-                  <p className="text-xs leading-relaxed text-[#7D6D5F]">
-                    {callout.detail}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Chief's Headline & Form - Right Side */}
-          <div className="lg:pl-8">
-            {/* Chief's Headline Block */}
-            <div
-              className={`transition-all duration-1000 ${
-                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-              }`}
-              style={{ transitionDelay: '250ms' }}
-            >
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-[#2D2420] leading-[0.95] mb-6">
-                Reservasi{' '}
-                <span className="text-[#C9A87C]">Online</span>
-              </h1>
-              <p className="text-base lg:text-lg text-[#8B7D6F] max-w-md mb-8 font-light">
-                Pilih layanan, dokter, dan jadwal kunjungan dalam satu alur yang nyaman dan terkendali.
-              </p>
-            </div>
-
-            {/* Chief's Reservation Form Card */}
-            <div
-              className={`frosted-glass rounded-[28px] p-6 lg:p-8 neo-card neo-card-hover
-                transition-all duration-1000 ${
-                  isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}
-              style={{ transitionDelay: '450ms' }}
-            >
-              {/* Pilih Layanan */}
-              <div className="mb-4">
-                <label className="block text-xs uppercase tracking-wider text-[#8B7D6F] mb-2">
-                  Pilih Layanan
-                </label>
-                <div className="relative">
-                  <Stethoscope className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B7D6F]" />
-                  <select
-                    value={selectedLayanan}
-                    onChange={(e) => { setSelectedLayanan(e.target.value); setSearched(false); }}
-                    className="w-full bg-white/50 border border-[#FAF3EB] rounded-xl pl-10 pr-8 py-3 text-sm text-[#2D2420] appearance-none focus:outline-none focus:ring-2 focus:ring-[#C9A87C]/30 transition-all hover:bg-white/70 neo-control"
-                  >
-                    <option value="">Pilih Layanan</option>
-                    <option>Poli Umum</option>
-                    <option>Poli Lansia</option>
-                    <option>Poli Gigi</option>
-                    <option>KIA</option>
-                    <option>VCT</option>
-                    <option>Laboratorium</option>
-                    <option>IGD</option>
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B7D6F] pointer-events-none" />
-                </div>
-              </div>
-
-              <button
-                onClick={handleCariJadwal}
-                className="w-full bg-[#C9A87C] hover:bg-[#B8956A] text-white font-medium py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group hover:shadow-lg hover:shadow-[#C9A87C]/20 hover:-translate-y-0.5 neo-card-hover mb-4"
-              >
-                <Clock className="w-5 h-5 transition-transform group-hover:rotate-12" />
-                <span>Cari Jadwal</span>
-              </button>
-
-              {/* Hasil Jadwal */}
-              {searched && (
-                <div className="border-t border-[#EFE4D6] pt-4">
-                  {scheduleResults.length === 0 ? (
-                    <p className="text-sm text-[#8B7D6F] text-center py-2">
-                      {selectedLayanan ? `Tidak ada jadwal untuk ${selectedLayanan}` : 'Pilih layanan terlebih dahulu'}
-                    </p>
-                  ) : (
-                    <div className="space-y-3">
-                      <p className="text-xs uppercase tracking-wider text-[#8B7D6F] mb-2">Jadwal tersedia</p>
-                      {scheduleResults.map((doc) => (
-                        <div key={doc.name} className="flex items-center gap-3 p-3 rounded-xl bg-white/60 neo-control">
-                          <img src={doc.avatar} alt={doc.name} className="w-10 h-10 rounded-full object-cover border border-[#EADDCB]" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-[#2D2420] truncate">{doc.name}</p>
-                            <p className="text-xs text-[#8B7D6F]">{doc.poli}</p>
-                          </div>
-                          <div className="text-right flex-shrink-0">
-                            <div className="flex items-center gap-1 text-xs text-[#C9A87C] font-medium">
-                              <Clock className="w-3 h-3" />
-                              <span>{doc.shift}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                      <a
-                        href="#reservation"
-                        className="w-full mt-2 border border-[#C9A87C] text-[#C9A87C] hover:bg-[#C9A87C] hover:text-white font-medium py-2.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 text-sm"
-                      >
-                        Reservasi Sekarang →
-                      </a>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div
-              className={`flex flex-wrap items-center gap-6 mt-8 
-                transition-all duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-              style={{ transitionDelay: '700ms' }}
-            >
-              <div className="flex items-center gap-2 group cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-[#FAF3EB] flex items-center justify-center transition-transform group-hover:scale-110 neo-inset">
-                  <span className="text-[#C9A87C] font-bold text-sm">24</span>
-                </div>
-                <div>
-                  <p className="text-xs text-[#8B7D6F]">Jam</p>
-                  <p className="text-sm font-medium text-[#2D2420]">IGD & Rawat Inap</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 group cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-[#FAF3EB] flex items-center justify-center transition-transform group-hover:scale-110 neo-inset">
-                  <span className="text-[#C9A87C] font-bold text-sm">80+</span>
-                </div>
-                <div>
-                  <p className="text-xs text-[#8B7D6F]">Tenaga</p>
-                  <p className="text-sm font-medium text-[#2D2420]">Medis & Paramedis</p>
-                </div>
-              </div>
-            </div>
-
-
-          </div>
-        </div>
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 right-20 w-96 h-96 bg-[#C9A87C]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-20 w-72 h-72 bg-[#C9A87C]/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#F8F5F2] to-transparent pointer-events-none" />
+      <div className="relative z-10 px-6 lg:px-[7vw]">
+        {/* Header */}
+        <div className={`text-center mb-10 transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <span className="inline-block px-4 py-1.5 bg-white/60 rounded-full text-[10px] uppercase tracking-[0.2em] text-[#8B7D6F] border border-[#EADDCB] mb-4">
+            Puskesmas Balowerti Kediri
+          </span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#2D2420] leading-tight mb-4">
+            Pelayanan <span className="text-[#C9A87C]">Kesehatan</span><br />Terjangkau & Berkualitas
+          </h1>
+          <p className="text-[#8B7D6F] max-w-lg mx-auto">Reservasi online untuk kunjungan fisik, konsultasi telemedicine, atau bantuan gawat darurat.</p>
+        </div>
 
-      {/* Melinda-style FAB — satu tombol, panel slide-up */}
-      <style>{`
-        @keyframes fab-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
-        @keyframes fab-pulse-ring { 0%{transform:scale(1);opacity:.6} 100%{transform:scale(1.6);opacity:0} }
-        @keyframes fab-item-in { 0%{opacity:0;transform:translateY(12px) scale(0.9)} 100%{opacity:1;transform:translateY(0) scale(1)} }
-        .fab-bob { animation: fab-bob 2s ease-in-out infinite; }
-        .fab-pulse { animation: fab-pulse-ring 1.8s ease-out infinite; }
-        .fab-item { animation: fab-item-in 0.28s cubic-bezier(.34,1.56,.64,1) both; }
-      `}</style>
-
-      <div
-        className={`fixed bottom-7 right-6 z-50 flex flex-col items-end gap-0 transition-all duration-700
-          ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-        style={{ transitionDelay: '1000ms' }}
-      >
-        {/* Panel slide-up — Luxury Dark */}
-        {fabOpen && (
-          <div className="mb-4 w-76 rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.45)]" style={{ width: '300px', background: '#1C1917' }}>
-
-            {/* Header panel */}
-            <div className="px-5 py-3.5" style={{ background: 'linear-gradient(135deg,#2D2420 0%,#1C1917 100%)', borderBottom: '1px solid rgba(201,168,124,0.15)' }}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Stethoscope className="w-3.5 h-3.5 text-[#C9A87C]" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9A87C]">Tenaga Medis Bertugas</span>
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          
+          {/* Left - Character */}
+          <div className={`transition-all duration-700 delay-100 ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+            <div className="relative h-[560px] rounded-3xl overflow-hidden bg-gradient-to-br from-[#FAF3EB] to-[#F8F5F2] border border-[#EADDCB] shadow-xl">
+              <img src="/images/doc.png" alt="Dokter" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#2D2420]/60 via-transparent to-transparent" />
+              
+              {/* Stats */}
+              <div className="absolute bottom-6 left-6 right-6 grid grid-cols-2 gap-3">
+                <div className="bg-white/95 rounded-2xl p-4 border border-[#EADDCB]">
+                  <Clock className="w-5 h-5 text-[#C9A87C] mb-2" />
+                  <p className="text-xs text-[#8B7D6F]">Jam Operasional</p>
+                  <p className="text-sm font-bold text-[#2D2420]">{OPERATIONAL_HOURS.clinicWindow}</p>
+                  <p className="text-[10px] text-[#C9A87C]">{OPERATIONAL_HOURS.emergency}</p>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-[10px] text-emerald-400 font-medium">Siaga</span>
+                <div className="bg-white/95 rounded-2xl p-4 border border-[#EADDCB]">
+                  <Stethoscope className="w-5 h-5 text-[#C9A87C] mb-2" />
+                  <p className="text-xs text-[#8B7D6F]">Tenaga Nakes</p>
+                  <p className="text-sm font-bold text-[#2D2420]">80+</p>
+                  <p className="text-[10px] text-[#C9A87C]">Dokter, Perawat, Bidan & Kesehatan</p>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Doctors list */}
-            <div style={{ borderBottom: '1px solid rgba(201,168,124,0.1)' }}>
-              {doctorSchedules.map((doc, i) => (
-                <div
-                  key={doc.name}
-                  className="fab-item flex items-center gap-3 px-5 py-3 transition-colors"
-                  style={{
-                    animationDelay: `${i * 60}ms`,
-                    borderBottom: i < doctorSchedules.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
-                  }}
-                >
-                  {/* Avatar kartun dokter */}
-                  <div className="w-10 h-10 rounded-full flex-shrink-0 overflow-hidden ring-1 ring-[#C9A87C]/30 bg-white">
-                    <img
-                      src={doc.avatar}
-                      alt={doc.name}
-                      className="w-full h-full object-cover object-top"
-                      loading="lazy"
+          {/* Right - Form Card */}
+          <div className={`transition-all duration-700 delay-200 ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
+            <div className="bg-white rounded-3xl border border-[#EADDCB] shadow-xl h-[560px] flex flex-col">
+              
+              {/* Tabs */}
+              <div className="p-2 bg-[#FAF3EB]/60 m-4 rounded-2xl flex gap-2">
+                <TabButton id="kunjungan" icon={MapPin} label="Kunjungan" color="bg-[#C9A87C]" />
+                <TabButton id="telemedicine" icon={Video} label="Telemedicine" color="bg-[#2D2420]" />
+                <TabButton id="darurat" icon={Siren} label="Darurat" color="bg-red-600" />
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 px-6 pb-6 overflow-y-auto">
+                
+                {mode === 'kunjungan' && (
+                  <div className="space-y-4">
+                    {/* Step 1 - Custom Select */}
+                    <CustomSelect 
+                      value={layanan} 
+                      onChange={(v: string) => { setLayanan(v); setShowDoctors(false); }}
+                      options={layananList}
+                      placeholder="Pilih Layanan"
                     />
+
+                    {/* Info Text */}
+                    <div className="bg-[#C9A87C]/10 rounded-xl p-4 border border-[#C9A87C]/20">
+                      <p className="text-sm text-[#2D2420] leading-relaxed">
+                        <span className="font-semibold">Tips:</span> Agar prosesnya lebih lancar, kami sangat menyarankan untuk hadir di ruang tunggu <span className="font-bold text-[#C9A87C]">15 menit</span> sebelum nomor antrean Anda.
+                      </p>
+                    </div>
+
+                    <button 
+                      onClick={() => setShowDoctors(true)}
+                      data-magnetic
+                      data-magnetic-strength="8"
+                      className="w-full bg-[#2D2420] text-white py-3 rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-[#1C1917] transition-colors"
+                    >
+                      <Clock className="w-4 h-4" /> Cari Jadwal Dokter
+                    </button>
+
+                    {/* Doctor List */}
+                    {showDoctors && layanan && (
+                      <div className="space-y-2">
+                        {doctors.filter(d => d.poli.includes(layanan.replace('Poli ', '')) || layanan === 'IGD').map(doc => (
+                          <div key={doc.name} className="flex items-center gap-3 p-3 bg-[#FAF3EB]/70 rounded-xl border border-[#EADDCB] hover:border-[#C9A87C]/30 transition-colors cursor-pointer">
+                            <img src={doc.img} alt={doc.name} className="w-10 h-10 rounded-full object-cover border border-[#EADDCB]" />
+                            <div className="flex-1">
+                              <p className="text-sm font-semibold text-[#2D2420]">{doc.name}</p>
+                              <p className="text-xs text-[#8B7D6F]">{doc.poli} • {doc.shift}</p>
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-[#C9A87C]/10 flex items-center justify-center">
+                              <ChevronDown className="w-4 h-4 text-[#C9A87C] -rotate-90" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Booking Form */}
+                    {showDoctors && (
+                      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-[#EADDCB]">
+                        <Input icon={User} placeholder="Nama" value={form.nama} onChange={(v: string) => setForm({...form, nama: v})} />
+                        <Input icon={Phone} placeholder="No HP" value={form.hp} onChange={(v: string) => setForm({...form, hp: v})} />
+                        <Input icon={Calendar} type="date" value={form.tanggal} onChange={(v: string) => setForm({...form, tanggal: v})} />
+                        <CustomSelect 
+                          value={form.waktu} 
+                          onChange={(v: string) => setForm({...form, waktu: v})}
+                          options={waktuList}
+                          placeholder="Pilih Waktu"
+                          compact
+                        />
+                      </div>
+                    )}
+
+                    {showDoctors && (
+                      <button 
+                        onClick={handleKunjungan}
+                        data-magnetic
+                        data-magnetic-strength="10"
+                        className="w-full bg-[#C9A87C] hover:bg-[#B8956A] text-white py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#C9A87C]/25"
+                      >
+                        <MessageCircle className="w-4 h-4" /> Konfirmasi via WhatsApp
+                      </button>
+                    )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-white truncate">{doc.name}</p>
-                    <p className="text-[10px] text-[#8B7D6F]">{doc.poli} · {doc.shift}</p>
+                )}
+
+                {mode === 'telemedicine' && (
+                  <div className="space-y-4">
+                    <div className="bg-[#FAF3EB] rounded-xl p-4 border border-[#EADDCB] flex items-center gap-3">
+                      <div className="w-10 h-10 bg-[#2D2420] rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Video className="w-5 h-5 text-white" />
+                      </div>
+                      <p className="text-sm text-[#8B7D6F]"><span className="font-semibold text-[#2D2420]">Konsultasi dari Rumah</span> — Tim merespons via WhatsApp dan Anda akan terhubung dengan Platform Telemedicine Puskesmas Balowerti</p>
+                    </div>
+
+                    <div className="grid grid-cols-4 gap-3">
+                      <div className="col-span-2">
+                        <Input icon={User} placeholder="Nama lengkap" value={tele.nama} onChange={(v: string) => setTele({...tele, nama: v})} />
+                      </div>
+                      <Input placeholder="Usia" value={tele.usia} onChange={(v: string) => setTele({...tele, usia: v})} />
+                      <Input icon={Phone} placeholder="No HP" value={tele.hp} onChange={(v: string) => setTele({...tele, hp: v})} />
+                    </div>
+
+                    <CustomSelect 
+                      value={tele.poli} 
+                      onChange={(v: string) => setTele({...tele, poli: v})}
+                      options={poliList}
+                      placeholder="Pilih Poli"
+                    />
+
+                    <textarea
+                      placeholder="Jelaskan keluhan..."
+                      value={tele.keluhan}
+                      onChange={(e) => setTele({...tele, keluhan: e.target.value})}
+                      rows={3}
+                      className="w-full bg-[#FAF3EB]/50 border border-[#EADDCB] rounded-xl px-3 py-3 text-sm resize-none focus:ring-2 focus:ring-[#C9A87C]/30"
+                    />
+
+                    <button 
+                      onClick={handleTele}
+                      data-magnetic
+                      data-magnetic-strength="10"
+                      className="w-full bg-[#2D2420] hover:bg-[#1C1917] text-white py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all"
+                    >
+                      <MessageCircle className="w-4 h-4" /> Kirim ke WhatsApp Loket
+                    </button>
                   </div>
-                  <span className="flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
-                    style={{ background: 'rgba(52,211,153,0.12)', color: '#34d399' }}>
-                    <span className="w-1 h-1 rounded-full bg-emerald-400 inline-block" />
-                    Bertugas
-                  </span>
-                </div>
-              ))}
-            </div>
+                )}
 
-            {/* Quick actions */}
-            <div>
-              <a
-                href="tel:0354689746"
-                className="fab-item flex items-center gap-3 px-5 py-3.5 transition-all group hover:bg-white/5"
-                style={{ animationDelay: '240ms', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
-              >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(239,68,68,0.15)' }}>
-                  <Ambulance className="w-4 h-4 text-red-400" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-semibold text-white">IGD Darurat</p>
-                  <p className="text-[10px] text-[#8B7D6F]">(0354) 689746 · 24 Jam</p>
-                </div>
-                <span className="relative flex h-2 w-2 flex-shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
-                </span>
-              </a>
+                {mode === 'darurat' && (
+                  <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
+                    {/* Alert Icon */}
+                    <div className="relative">
+                      <div className="w-24 h-24 bg-red-600 rounded-full flex items-center justify-center animate-pulse shadow-xl shadow-red-500/40">
+                        <Siren className="w-12 h-12 text-white" />
+                      </div>
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full animate-ping" />
+                    </div>
 
-              <a
-                href="https://wa.me/6285178922096"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="fab-item flex items-center gap-3 px-5 py-3.5 transition-all group hover:bg-white/5"
-                style={{ animationDelay: '300ms', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
-              >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(37,211,102,0.15)' }}>
-                  <svg className="w-4 h-4" style={{ fill: '#25D366' }} viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-semibold text-white">Chat WhatsApp</p>
-                  <p className="text-[10px] text-[#8B7D6F]">Reservasi & konsultasi</p>
-                </div>
-                <Phone className="w-3 h-3 text-[#8B7D6F]" />
-              </a>
+                    {/* Info */}
+                    <div>
+                      <h3 className="text-2xl font-bold text-red-700 mb-2">Gawat Darurat</h3>
+                      <p className="text-sm text-red-600">IGD Siap 24 Jam</p>
+                      <p className="text-xs text-[#8B7D6F] mt-2 max-w-xs mx-auto">
+                        Tekan tombol di bawah untuk mengirim alert darurat ke petugas IGD beserta lokasi Anda.
+                      </p>
+                    </div>
 
-              <a
-                href="#reservation"
-                onClick={() => setFabOpen(false)}
-                className="fab-item flex items-center gap-3 px-5 py-3.5 transition-all group hover:bg-white/5"
-                style={{ animationDelay: '360ms' }}
-              >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(201,168,124,0.15)' }}>
-                  <MessageCircle className="w-4 h-4 text-[#C9A87C]" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-semibold text-white">Reservasi Online</p>
-                  <p className="text-[10px] text-[#8B7D6F]">Pilih layanan & jadwal</p>
-                </div>
-              </a>
+                    {/* Emergency Button */}
+                    <button 
+                      onClick={() => {
+                        if (navigator.geolocation) {
+                          navigator.geolocation.getCurrentPosition(
+                            (pos) => {
+                              const mapsUrl = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                              sendWA(`*🚨 ALERT DARURAT IGD 🚨*\n\nLokasi Pasien:\n${mapsUrl}\n\nMohon bantuan segera!`);
+                            },
+                            () => {
+                              sendWA(`*🚨 ALERT DARURAT IGD 🚨*\n\nPasien membutuhkan bantuan segera!\n\nMohon hubungi kembali untuk lokasi.\n\nTerima kasih.`);
+                            }
+                          );
+                        } else {
+                          sendWA(`*🚨 ALERT DARURAT IGD 🚨*\n\nPasien membutuhkan bantuan segera!\n\nMohon hubungi kembali untuk lokasi.`);
+                        }
+                      }}
+                      data-magnetic
+                      data-magnetic-strength="12"
+                      className="w-full max-w-xs bg-red-600 hover:bg-red-700 text-white py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 animate-pulse shadow-2xl shadow-red-500/40 hover:scale-105 transition-transform"
+                    >
+                      <Siren className="w-6 h-6" /> Notify Petugas IGD Sekarang
+                    </button>
+
+                    {/* Response Time */}
+                    <div className="flex items-center gap-2 text-red-600">
+                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                      <span className="text-sm font-medium">Respons &lt; 5 menit</span>
+                    </div>
+
+                    {/* Note */}
+                    <p className="text-[10px] text-[#8B7D6F]">
+                      Sistem akan otomatis mengirim lokasi Anda ke petugas IGD
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        )}
-
-        {/* FAB Trigger Button */}
-        <div className="relative flex items-center justify-center">
-          {/* Pulse ring */}
-          {!fabOpen && (
-            <span className="fab-pulse absolute w-14 h-14 rounded-full bg-[#C9A87C]/40 pointer-events-none" />
-          )}
-          <button
-            onClick={() => setFabOpen(prev => !prev)}
-            className={`fab-bob relative w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-300
-              ${fabOpen ? 'bg-[#2D2420] rotate-45' : 'bg-[#C9A87C] hover:bg-[#B8956A]'}
-              shadow-[0_5px_20px_rgba(0,0,0,0.25)]`}
-            aria-label="Buka menu kontak"
-          >
-            {fabOpen
-              ? <X className="w-6 h-6 text-white" />
-              : <Phone className="w-6 h-6 text-white" />
-            }
-          </button>
         </div>
       </div>
     </section>
   );
-};
+}
 
-export default Hero;
+// Reusable Input Component
+function Input({ icon: Icon, type = 'text', placeholder, value, onChange }: any) {
+  return (
+    <div className="relative">
+      {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B7D6F]" />}
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`w-full bg-[#FAF3EB]/50 border border-[#EADDCB] rounded-xl ${Icon ? 'pl-10' : 'pl-3'} pr-3 py-3 text-sm focus:ring-2 focus:ring-[#C9A87C]/30 focus:outline-none`}
+      />
+    </div>
+  );
+}
+
+// Custom Select Component with Glassmorphism
+function CustomSelect({ value, onChange, options, placeholder, compact }: any) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const selected = options.find((o: any) => o.id === value);
+  const DefaultIcon = options[0]?.icon || Stethoscope;
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative" ref={containerRef}>
+      {!compact && (
+        <label className="text-xs uppercase tracking-wider text-[#8B7D6F] mb-2 block font-medium">
+          {placeholder}
+        </label>
+      )}
+      
+      {/* Trigger Button */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        className={`w-full bg-white/80 backdrop-blur-sm border rounded-xl px-3 text-left transition-all duration-200 group ${
+          compact ? 'py-2.5' : 'py-3.5 px-4'
+        } ${
+          isOpen || isFocused 
+            ? 'border-[#C9A87C] ring-2 ring-[#C9A87C]/20 shadow-lg shadow-[#C9A87C]/10' 
+            : 'border-[#EADDCB] hover:border-[#C9A87C]/50 hover:shadow-md'
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          {selected ? (
+            <>
+              <div className={`${compact ? 'w-8 h-8' : 'w-10 h-10'} rounded-xl bg-[#C9A87C]/10 flex items-center justify-center flex-shrink-0`}>
+                <selected.icon className={`${compact ? 'w-4 h-4' : 'w-5 h-5'} text-[#C9A87C]`} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className={`font-semibold text-[#2D2420] ${compact ? 'text-xs' : 'text-sm'}`}>{selected.label}</p>
+                {!compact && <p className="text-xs text-[#8B7D6F]">{selected.desc}</p>}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={`${compact ? 'w-8 h-8' : 'w-10 h-10'} rounded-xl bg-[#FAF3EB] flex items-center justify-center flex-shrink-0`}>
+                <DefaultIcon className={`${compact ? 'w-4 h-4' : 'w-5 h-5'} text-[#8B7D6F]`} />
+              </div>
+              <span className={`text-[#8B7D6F] flex-1 ${compact ? 'text-xs' : 'text-sm'}`}>{placeholder}</span>
+            </>
+          )}
+          <ChevronDown className={`${compact ? 'w-4 h-4' : 'w-5 h-5'} text-[#8B7D6F] transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        </div>
+      </button>
+
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div className={`absolute z-50 w-full mt-2 bg-white/95 backdrop-blur-xl rounded-2xl border border-[#EADDCB] shadow-2xl shadow-black/10 overflow-hidden animate-in fade-in zoom-in-95 duration-200 ${compact ? 'max-h-[200px]' : 'max-h-[280px]'}`}>
+          <div className={`overflow-y-auto py-2 ${compact ? 'max-h-[200px]' : 'max-h-[280px]'}`}>
+            {options.map((option: any, idx: number) => (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => { onChange(option.id); setIsOpen(false); }}
+                className={`w-full px-4 flex items-center gap-3 transition-all duration-150 ${
+                  compact ? 'py-2' : 'py-3'
+                } ${
+                  value === option.id 
+                    ? 'bg-[#C9A87C]/10' 
+                    : 'hover:bg-[#FAF3EB]/80'
+                } ${idx !== options.length - 1 ? 'border-b border-[#EADDCB]/50' : ''}`}
+              >
+                <div className={`${compact ? 'w-7 h-7' : 'w-9 h-9'} rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
+                  value === option.id ? 'bg-[#C9A87C] text-white' : 'bg-[#FAF3EB] text-[#8B7D6F]'
+                }`}>
+                  <option.icon className={`${compact ? 'w-3.5 h-3.5' : 'w-4 h-4'}`} />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className={`font-medium text-[#2D2420] ${compact ? 'text-xs' : 'text-sm'}`}>
+                    {option.label}
+                  </p>
+                  {!compact && <p className="text-xs text-[#8B7D6F]">{option.desc}</p>}
+                </div>
+                {value === option.id && (
+                  <div className="w-2 h-2 rounded-full bg-[#C9A87C]" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
