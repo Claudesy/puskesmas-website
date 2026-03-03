@@ -47,7 +47,7 @@ const Location = () => {
     {
       icon: MessageCircle,
       label: 'WhatsApp',
-      value: '0812-3456-7890',
+      value: '0851-7892-2096',
     },
     {
       icon: Mail,
@@ -218,7 +218,7 @@ const Location = () => {
               style={{ transitionDelay: '800ms' }}
             >
               <a
-                href="https://wa.me/6281234567890"
+                href="https://wa.me/6285178922096"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-[#C9A87C] hover:bg-[#B8956A] text-white font-medium px-6 py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-[#C9A87C]/20 neo-card-hover"

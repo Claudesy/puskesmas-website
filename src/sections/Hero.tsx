@@ -182,8 +182,10 @@ const Hero = () => {
                     <select className="w-full bg-white/50 border border-[#FAF3EB] rounded-xl pl-10 pr-8 py-3 text-sm text-[#2D2420] appearance-none focus:outline-none focus:ring-2 focus:ring-[#C9A87C]/30 transition-all hover:bg-white/70 neo-control">
                       <option>Pilih Layanan</option>
                       <option>Poli Umum</option>
+                      <option>Poli Lansia</option>
                       <option>Poli Gigi</option>
                       <option>KIA</option>
+                      <option>VCT</option>
                       <option>Laboratorium</option>
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B7D6F] pointer-events-none" />
@@ -243,13 +245,29 @@ const Hero = () => {
               </div>
               <div className="flex items-center gap-2 group cursor-pointer">
                 <div className="w-10 h-10 rounded-full bg-[#FAF3EB] flex items-center justify-center transition-transform group-hover:scale-110 neo-inset">
-                  <span className="text-[#C9A87C] font-bold text-sm">20+</span>
+                  <span className="text-[#C9A87C] font-bold text-sm">80+</span>
                 </div>
                 <div>
                   <p className="text-xs text-[#8B7D6F]">Tenaga</p>
                   <p className="text-sm font-medium text-[#2D2420]">Medis & Paramedis</p>
                 </div>
               </div>
+            </div>
+
+            {/* Chief's Service Chips */}
+            <div
+              className={`flex flex-wrap gap-2 mt-4
+                transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              style={{ transitionDelay: '850ms' }}
+            >
+              {['Poli Umum', 'Lansia', 'Gigi', 'KIA', 'VCT'].map((poli) => (
+                <span
+                  key={poli}
+                  className="inline-flex items-center text-xs font-medium text-[#8B7D6F] bg-[#FAF3EB] border border-[#EADDCB] rounded-full px-3 py-1.5 neo-chip"
+                >
+                  {poli}
+                </span>
+              ))}
             </div>
           </div>
         </div>

@@ -35,7 +35,7 @@ const About = () => {
     },
     {
       icon: Users,
-      value: '>20',
+      value: '80+',
       label: 'Tenaga',
       description: 'Medis & Paramedis',
     },
