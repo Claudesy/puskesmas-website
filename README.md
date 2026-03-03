@@ -47,7 +47,7 @@ The website is organized into a seamless, scroll-driven single-page experience w
                        
                         - ---
 
-                        ## 🛠️ Tech Stack
+                        ## Tech Stack
 
                         | Category | Technology |
                         |---|---|
@@ -63,7 +63,7 @@ The website is organized into a seamless, scroll-driven single-page experience w
 
                         ---
 
-                        ## 📁 Project Structure
+                        ## Project Structure
 
                         ```
                         puskesmas-website/
