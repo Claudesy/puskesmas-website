@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 type Step = {
@@ -82,7 +82,31 @@ const fadeUp = {
 
 const PatientFlow = () => {
   const reduce = useReducedMotion();
-  const [active, setActive] = useState(3);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [active, setActive] = useState(0);
+
+  // Auto-sequence saat section visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    setActive(1);
+    let current = 1;
+    const interval = setInterval(() => {
+      current++;
+      setActive(current);
+      if (current >= 8) clearInterval(interval);
+    }, 900);
+    return () => clearInterval(interval);
+  }, [isVisible]);
 
   const steps: Step[] = useMemo(
     () => [
@@ -134,7 +158,7 @@ const PatientFlow = () => {
   const a = steps[activeIdx];
 
   return (
-    <section id="patient-flow" className="min-h-screen bg-[#f7f2ea] text-black/80">
+    <section ref={sectionRef} id="patient-flow" className="relative w-full py-14 lg:py-20 bg-[#F8F5F2] overflow-hidden neo-section text-black/80">
       {/* background rings */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full border border-black/5" />
@@ -142,23 +166,19 @@ const PatientFlow = () => {
         <div className="absolute -left-40 -bottom-40 h-[520px] w-[520px] rounded-full border border-black/5" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-6 py-14">
+      <div className="relative px-6 lg:px-[7vw]">
         {/* Header */}
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={reduce ? undefined : { opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 220, damping: 22 }}
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-4 mb-10"
         >
-          <div className="text-sm tracking-widest text-black/50">ALUR PELAYANAN BPJS</div>
-          <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
-            <h2 className="text-5xl font-semibold tracking-tight text-black/80" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Berobat dengan
-            </h2>
-            <span className="text-5xl font-semibold tracking-tight text-emerald-600" style={{ fontFamily: "'Playfair Display', serif" }}>
-              BPJS
-            </span>
-          </div>
+          <div className="text-xs uppercase tracking-[0.2em] text-[#8B7D6F] font-medium">Alur Pelayanan BPJS</div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2D2420] leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Berobat dengan{' '}
+            <span style={{ color: '#01934a' }}>BPJS</span>
+          </h2>
           <div className="flex flex-wrap items-center gap-2 text-sm text-black/55">
             <span className="rounded-full border border-black/10 bg-white/50 px-3 py-1 backdrop-blur">
               🪪 Kartu BPJS (fisik / Mobile JKN)
