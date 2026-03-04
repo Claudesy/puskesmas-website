@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Send, Sparkles, Brain, Mic, User } from 'lucide-react';
+import { OPERATIONAL_HOURS, SITE_INFO } from '@/config/site';
 
 interface Message {
   id: number;
@@ -27,7 +28,7 @@ const LuxuryChatbox = ({ isVisible }: { isVisible: boolean }) => {
     
     // Alamat & Lokasi
     if (lowerMsg.includes('alamat') || lowerMsg.includes('lokasi') || lowerMsg.includes('dimana')) {
-      return "📍 Puskesmas Balowerti\nJl. Balowerti GG V No 68\nKota Kediri, Jawa Timur\n\n📞 (0354) 689746\n\nBuka setiap hari pukul 08.00 - 20.00 WIB\nUGD 24 jam siaga! 🚨";
+      return `📍 ${SITE_INFO.name}\n${SITE_INFO.address}\nKota Kediri, Jawa Timur\n\n📞 ${SITE_INFO.phoneDisplay}\n\nBuka ${OPERATIONAL_HOURS.clinicFull}\n${OPERATIONAL_HOURS.emergency} siaga! 🚨`;
     }
     
     // Jadwal Dokter
@@ -42,12 +43,12 @@ const LuxuryChatbox = ({ isVisible }: { isVisible: boolean }) => {
     
     // Jam Operasional
     if (lowerMsg.includes('jam') || lowerMsg.includes('buka') || lowerMsg.includes('waktu')) {
-      return "⏰ Jam Operasional:\n\n🕐 Senin - Minggu:\n08.00 - 20.00 WIB\n\n🚨 UGD & Rawat Inap:\n24 JAM NONSTOP!\n\n📅 Reservasi online bisa dilakukan kapan saja!";
+      return `⏰ Jam Operasional:\n\n🕐 ${OPERATIONAL_HOURS.clinicFull}\n\n🚨 ${OPERATIONAL_HOURS.emergency}:\n24 JAM NONSTOP!\n\n📅 Reservasi online bisa dilakukan kapan saja!`;
     }
     
     // Reservasi
     if (lowerMsg.includes('reservasi') || lowerMsg.includes('booking') || lowerMsg.includes('daftar') || lowerMsg.includes('antri')) {
-      return "📅 Cara Reservasi:\n\n1️⃣ Isi form di sebelah kanan ➡️\n2️⃣ Pilih layanan & dokter\n3️⃣ Pilih tanggal kunjungan\n4️⃣ Klik 'Cari Jadwal'\n\nAtau hubungi:\n📞 (0354) 689746\n\n💡 Dengan AI Sentra, antrian lebih teratur dan cepat!";
+      return `📅 Cara Reservasi:\n\n1️⃣ Isi form di sebelah kanan ➡️\n2️⃣ Pilih layanan & dokter\n3️⃣ Pilih tanggal kunjungan\n4️⃣ Klik 'Cari Jadwal'\n\nAtau hubungi:\n📞 ${SITE_INFO.phoneDisplay}\n\n💡 Dengan AI Sentra, antrian lebih teratur dan cepat!`;
     }
     
     // BPJS
@@ -57,7 +58,7 @@ const LuxuryChatbox = ({ isVisible }: { isVisible: boolean }) => {
     
     // UGD Darurat
     if (lowerMsg.includes('ugd') || lowerMsg.includes('darurat')) {
-      return "🚨 UGD 24 JAM\n\nSiaga setiap saat untuk:\n• Kecelakaan\n• Serangan jantung\n• Sesak napas berat\n• Persalinan darurat\n• Luka berat\n\n📞 Hotline: (0354) 689746\n🚑 Ambulance siap 24/7\n\nJangan ragu hubungi kami! 💪";
+      return `🚨 UGD 24 JAM\n\nSiaga setiap saat untuk:\n• Kecelakaan\n• Serangan jantung\n• Sesak napas berat\n• Persalinan darurat\n• Luka berat\n\n📞 Hotline: ${SITE_INFO.phoneDisplay}\n🚑 Ambulance siap 24/7\n\nJangan ragu hubungi kami! 💪`;
     }
     
     // Tentang ABBY
@@ -85,7 +86,7 @@ const LuxuryChatbox = ({ isVisible }: { isVisible: boolean }) => {
         lowerMsg.includes('flu') || lowerMsg.includes('pilek') || lowerMsg.includes('migrain') ||
         lowerMsg.includes('asma') || lowerMsg.includes('diabetes') || lowerMsg.includes('darah tinggi')) {
       
-      return "🙏 Mohon Maaf, Ibu\n\nIbu, saya mohon maaf tetapi sebaiknya langsung bertemu dengan dokter kami agar bisa diperiksa dengan tepat dan mendapatkan penanganan yang sesuai.\n\n🩺 Silakan Ibu:\n• Datang ke Poli Umum (Lantai 1)\n• Atau Reservasi Online untuk antrian lebih cepat\n• UGD 24 jam siaga untuk kondisi darurat\n\n📞 Bisa juga hubungi kami di: (0354) 689746\n\n💚 Kesehatan Ibu adalah prioritas utama kami. Semoga lekas sembuh ya, Bu! 🙏";
+      return `🙏 Mohon Maaf, Ibu\n\nIbu, saya mohon maaf tetapi sebaiknya langsung bertemu dengan dokter kami agar bisa diperiksa dengan tepat dan mendapatkan penanganan yang sesuai.\n\n🩺 Silakan Ibu:\n• Datang ke Poli Umum (Lantai 1)\n• Atau Reservasi Online untuk antrian lebih cepat\n• ${OPERATIONAL_HOURS.emergency} siaga untuk kondisi darurat\n\n📞 Bisa juga hubungi kami di: ${SITE_INFO.phoneDisplay}\n\n💚 Kesehatan Ibu adalah prioritas utama kami. Semoga lekas sembuh ya, Bu! 🙏`;
     }
     
     // Terima Kasih
@@ -94,7 +95,7 @@ const LuxuryChatbox = ({ isVisible }: { isVisible: boolean }) => {
     }
     
     // Default Response
-    return "🤔 Maaf, saya belum memahami pertanyaan tersebut.\n\n💡 Coba tanya tentang:\n• Jadwal dokter\n• Lokasi puskesmas\n• Jam operasional\n• Cara reservasi\n• Info layanan\n\nAtau hubungi admin:\n📞 (0354) 689746";
+    return `🤔 Maaf, saya belum memahami pertanyaan tersebut.\n\n💡 Coba tanya tentang:\n• Jadwal dokter\n• Lokasi puskesmas\n• Jam operasional\n• Cara reservasi\n• Info layanan\n\nAtau hubungi admin:\n📞 ${SITE_INFO.phoneDisplay}`;
   };
 
   // Send Welcome

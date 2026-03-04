@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
+import { OPERATIONAL_HOURS, SITE_INFO } from '@/config/site';
 
 const Location = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -37,27 +38,27 @@ const Location = () => {
     {
       icon: MapPin,
       label: 'Alamat',
-      value: 'Jl. Balowerti GG V No 68, Kediri',
+      value: SITE_INFO.address,
     },
     {
       icon: Phone,
       label: 'Telepon',
-      value: '(0354) 689746',
+      value: SITE_INFO.phoneDisplay,
     },
     {
       icon: MessageCircle,
       label: 'WhatsApp',
-      value: '0851-7892-2096',
+      value: SITE_INFO.whatsappDisplay,
     },
     {
       icon: Mail,
       label: 'Email',
-      value: 'puskesmas.balowerti@kediri.go.id',
+      value: SITE_INFO.email,
     },
     {
       icon: Clock,
       label: 'Jam Operasional',
-      value: 'Senin–Jumat: 08.00–20.00 | IGD: 24 Jam',
+      value: OPERATIONAL_HOURS.combined,
     },
   ];
 
@@ -218,7 +219,7 @@ const Location = () => {
               style={{ transitionDelay: '800ms' }}
             >
               <a
-                href="https://wa.me/6285178922096"
+                href={`https://wa.me/${SITE_INFO.whatsappInternational}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-[#C9A87C] hover:bg-[#B8956A] text-white font-medium px-6 py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-[#C9A87C]/20 neo-card-hover"
@@ -227,7 +228,7 @@ const Location = () => {
                 <span>Chat WhatsApp</span>
               </a>
               <a
-                href="tel:0354689746"
+                href={`tel:${SITE_INFO.phoneTel}`}
                 className="inline-flex items-center gap-2 frosted-glass hover:bg-white text-[#2D2420] font-medium px-6 py-3 rounded-xl transition-all duration-300 neo-control"
               >
                 <Phone className="w-5 h-5 text-[#C9A87C]" />

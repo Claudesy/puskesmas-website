@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { OPERATIONAL_HOURS } from '@/config/site';
 
 const Doctors = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -80,7 +81,7 @@ const Doctors = () => {
       focus: ['Triage cepat', 'Stabilisasi awal', 'Rujukan emergensi'],
     },
   ];
-  const sharedSchedule = 'Senin-Sabtu 07:30-17:00';
+  const sharedSchedule = OPERATIONAL_HOURS.clinicFull;
 
   return (
     <section

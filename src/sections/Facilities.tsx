@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { MapPin, Clock, Phone, Sparkles } from 'lucide-react';
 import { useParallax } from '../hooks/useSmoothImage';
+import { OPERATIONAL_HOURS, SITE_INFO } from '@/config/site';
 
 const AnimatedImage = ({ 
   src, 
@@ -262,9 +263,9 @@ const Facilities = () => {
         {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           {[
-            { icon: MapPin, title: 'Lokasi', desc: 'Jl. Balowerti GG V No 68, Kediri', delay: 1200 },
-            { icon: Clock, title: 'Jam Operasional', desc: 'Senin - Sabtu: 08.00 - 20.00 WIB', delay: 1300 },
-            { icon: Phone, title: 'Kontak', desc: '(0354) 689746', delay: 1400 },
+            { icon: MapPin, title: 'Lokasi', desc: SITE_INFO.address, delay: 1200 },
+            { icon: Clock, title: 'Jam Operasional', desc: OPERATIONAL_HOURS.clinicFull, delay: 1300 },
+            { icon: Phone, title: 'Kontak', desc: SITE_INFO.phoneDisplay, delay: 1400 },
           ].map((item) => (
             <div
               key={item.title}
