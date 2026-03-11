@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'

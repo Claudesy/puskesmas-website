@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's Diseases Section — Open Book Design
 // 144 Penyakit wajib diselesaikan di Puskesmas (Permenkes No.28/2014)
 

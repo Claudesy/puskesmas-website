@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 import React from 'react';
 import { MenuIcon, Instagram, Youtube } from 'lucide-react';
 import { Sheet, SheetContent, SheetFooter } from '@/components/ui/sheet';

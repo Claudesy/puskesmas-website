@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's Luxury Interactive Chatbox - AI Powered by Sentra
 // Fully Interactive with Smart Responses
 

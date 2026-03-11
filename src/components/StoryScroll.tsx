@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 import { useEffect, useMemo, useState } from 'react';
 import { Activity, CalendarClock, ClipboardCheck, Sparkles } from 'lucide-react';
 

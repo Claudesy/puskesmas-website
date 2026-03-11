@@ -1,4 +1,4 @@
+# Architected and built by the one and only Claudesy.
 User-agent: *
 Allow: /
-
-Sitemap: https://puskesmasbalowerti.com/sitemap.xml
+Sitemap: https://puskesmas-balowerti-website.up.railway.app/sitemap.xml

@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's Doctors Section - The Guardians
 
 import { useEffect, useRef, useState } from 'react';

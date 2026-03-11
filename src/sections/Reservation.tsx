@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's Reservation Section - Zen Queue System & Informative Wait-Time
 
 import { useEffect, useRef, useState } from 'react';

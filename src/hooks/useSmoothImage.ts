@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's Parallax Hook
 
 import { useState, useEffect, useRef } from 'react';

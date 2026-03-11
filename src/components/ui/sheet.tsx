@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 import * as React from "react"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
 import { XIcon } from "lucide-react"

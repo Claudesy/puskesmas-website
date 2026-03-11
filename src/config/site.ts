@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 export const SITE_INFO = {
   name: 'Puskesmas Balowerti',
   address: 'Jl. Balowerti GG V No 68, Kediri',

@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's Location Section - Lokasi & Kontak
 
 import { useEffect, useRef, useState } from 'react';

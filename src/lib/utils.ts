@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 

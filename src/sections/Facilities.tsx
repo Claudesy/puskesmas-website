@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's Facilities Section - Real Photos from Puskesmas Balowerti
 
 import { useEffect, useRef, useState } from 'react';

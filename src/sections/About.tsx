@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Clock, Users, MapPin } from 'lucide-react';
 import { SITE_INFO } from '@/config/site';
@@ -53,7 +54,7 @@ const About = () => {
               <span className="text-[#C9A87C]">Poned Balowerti</span>
             </h2>
             <p className="text-sm lg:text-base text-[#8B7D6F] leading-relaxed mb-6 max-w-md">
-              Kami menyediakan layanan kesehatan primer dan rujukan bagi warga Kediri dan sekitarnya—dengan tenaga medis yang berpengalaman dan fasilitas yang nyaman.
+              Mendedikasikan standar medis tertinggi bagi warga Kediri melalui integrasi nakes ahli dan fasilitas modern, menghadirkan ekosistem kesehatan primer yang solutif, responsif, dan terpercaya.
             </p>
             <a
               href="#services"

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// Architected and built by the one and only Claudesy.
 
 import fs from 'node:fs/promises';
 import path from 'node:path';

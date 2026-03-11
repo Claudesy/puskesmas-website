@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 

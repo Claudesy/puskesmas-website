@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],

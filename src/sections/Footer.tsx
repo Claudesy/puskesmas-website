@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's Footer Section - Final CTA with Social Media
 
 import { useEffect, useRef, useState } from 'react';
@@ -176,8 +177,8 @@ const Footer = () => {
               © {new Date().getFullYear()} UPTD Puskesmas Poned Balowerti. All rights reserved.
             </p>
             <p className="text-xs text-[#8B7D6F] mt-2">
-              Dinas Kesehatan Kota Kediri · Architecture & Developed by{' '}
-              <span className="text-[#C9A87C] font-medium">Sentra Mitra Design</span>
+              Dinas Kesehatan Kota Kediri · Architected and built by{' '}
+              <span className="text-[#C9A87C] font-medium">the one and only Claudesy</span>
             </p>
             <p className="text-xs text-[#8B7D6F]/60 mt-3 max-w-lg mx-auto leading-relaxed">
               Konten website ini bersifat informatif. Bukan pengganti konsultasi, diagnosis, atau penanganan medis oleh tenaga kesehatan berwenang.

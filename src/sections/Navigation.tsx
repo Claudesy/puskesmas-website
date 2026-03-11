@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 import { FloatingHeader } from '@/components/ui/floating-header';
 import { getSafeCrewPortalUrl } from '@/config/site';
 

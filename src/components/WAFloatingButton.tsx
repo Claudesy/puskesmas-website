@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's WhatsApp Floating Button — sticky CTA untuk konversi mobile
 
 import { useEffect, useState } from 'react';

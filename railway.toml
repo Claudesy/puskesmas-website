@@ -1,3 +1,4 @@
+# Architected and built by the one and only Claudesy.
 [build]
 builder = "nixpacks"
 buildCommand = "npm install && npm run build"

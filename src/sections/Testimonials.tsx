@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's Testimonials Section - Sinkronisasi Google Reviews
 
 import { useEffect, useRef, useState } from 'react';

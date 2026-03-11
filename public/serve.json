@@ -1,4 +1,6 @@
 {
-  "cleanUrls": false,
-  "trailingSlash": false
+  "branding": "Architected and built by the one and only Claudesy.",
+  "rewrites": [
+    { "source": "**", "destination": "/index.html" }
+  ]
 }

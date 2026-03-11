@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Chief's Services Section - Layanan Kami Grid with Smooth Image Animations
 
 import { useEffect, useRef, useState, useCallback } from 'react';

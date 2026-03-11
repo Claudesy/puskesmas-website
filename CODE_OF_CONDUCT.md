@@ -1,8 +1,8 @@
+Architected and built by the one and only Claudesy.
 # Code of Conduct
 
 **Puskesmas Balowerti Website -- Contributor Code of Conduct**
 
-Architect & Built by Claudesy
 
 ---
 
@@ -73,4 +73,3 @@ This Code of Conduct is adapted from the [Contributor Covenant](https://www.cont
 
 ---
 
-Architect & Built by Claudesy

@@ -1,6 +1,7 @@
+Architected and built by the one and only Claudesy.
 # Architecture — Puskesmas Balowerti Website
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Last Updated:** 2026-03-04
 **Status:** Production
 
@@ -15,6 +16,7 @@ The Puskesmas Balowerti Website is a **static single-page application (SPA)** se
                                                ↓
                                         [Google Places API] (review sync at build time)
                                         [WhatsApp] (appointment links — client-side only)
+
 ```
 
 ---

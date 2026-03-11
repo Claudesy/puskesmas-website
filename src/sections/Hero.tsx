@@ -1,3 +1,4 @@
+// Architected and built by the one and only Claudesy.
 // Hero Section - Efficient & Clean Design
 import { useState, useEffect, useRef } from 'react';
 import { Clock, MapPin, Video, Siren, ChevronDown, User, Phone, Calendar, Stethoscope, MessageCircle, Activity, Baby, FlaskConical, HeartPulse, Home, Microscope } from 'lucide-react';
@@ -156,9 +157,9 @@ export default function Hero() {
             Puskesmas Balowerti Kediri
           </span>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#2D2420] leading-tight mb-4">
-            Pelayanan <span className="text-[#C9A87C]">Komprehensif</span><br />dan Berkualitas
+            Elevasi Kesehatan Masyarakat:<br /><span className="text-[#C9A87C]">Layanan Medis Presisi</span>
           </h1>
-          <p className="text-[#8B7D6F] max-w-lg mx-auto">Reservasi online untuk kunjungan fisik, konsultasi telemedicine, atau bantuan gawat darurat.</p>
+          <p className="text-[#8B7D6F] max-w-lg mx-auto">Inovatif, responsif, dan berpusat pada pasien. Reservasi online untuk kunjungan fisik, konsultasi telemedicine, atau bantuan gawat darurat.</p>
         </div>
 
         {/* Content Grid */}

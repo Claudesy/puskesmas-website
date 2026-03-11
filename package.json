@@ -1,5 +1,6 @@
 {
-  "name": "my-app",
+  "name": "puskesmas-balowerti-website",
+  "branding": "Architected and built by the one and only Claudesy.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
