@@ -6,10 +6,8 @@ type StoryStep = {
   id: string;
   label: string;
   icon: typeof CalendarClock;
+  targetId: string;
 };
-
-const clamp = (value: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, value));
 
 const StoryScroll = () => {
   const steps = useMemo<StoryStep[]>(
@@ -18,182 +16,121 @@ const StoryScroll = () => {
         id: 'reservasi',
         label: 'Reservasi',
         icon: CalendarClock,
+        targetId: 'hero',
       },
       {
         id: 'pemeriksaan',
         label: 'Pemeriksaan',
         icon: Activity,
+        targetId: 'services',
       },
       {
         id: 'tindak-lanjut',
         label: 'Tindak Lanjut',
         icon: ClipboardCheck,
+        targetId: 'reservation',
       },
     ],
     []
   );
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [ready, setReady] = useState(false);
-  const [isStoryVisible, setIsStoryVisible] = useState(false);
 
   useEffect(() => {
-    let frame = 0;
+    const targets = steps
+      .map((step) => document.getElementById(step.targetId))
+      .filter((target): target is HTMLElement => target instanceof HTMLElement);
 
-    const getTop = (id: string): number | null => {
-      const target = document.getElementById(id);
-      return target ? target.offsetTop : null;
-    };
+    if (targets.length !== steps.length) {
+      return;
+    }
 
-    const update = () => {
-      const heroTop = getTop('hero');
-      const servicesTop = getTop('services');
-      const reservationTop = getTop('reservation');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((left, right) => right.intersectionRatio - left.intersectionRatio);
 
-      if (heroTop === null || servicesTop === null || reservationTop === null) {
-        setReady(false);
-        return;
+        if (visibleEntries.length === 0) {
+          return;
+        }
+
+        const nextIndex = steps.findIndex(
+          (step) => step.targetId === (visibleEntries[0].target as HTMLElement).id
+        );
+
+        if (nextIndex >= 0) {
+          setActiveIndex(nextIndex);
+        }
+      },
+      {
+        threshold: [0.25, 0.45, 0.7],
+        rootMargin: '-20% 0px -45% 0px',
       }
+    );
 
-      setReady(true);
+    targets.forEach((target) => observer.observe(target));
 
-      const viewportProbe = window.scrollY;
-      const firstPivot = Math.max(heroTop, 0);
-      const secondPivot = Math.max(servicesTop, firstPivot + 1);
-      const thirdPivot = Math.max(reservationTop, secondPivot + 1);
-      const revealThreshold = firstPivot + window.innerHeight * 0.4;
+    return () => observer.disconnect();
+  }, [steps]);
 
-      setIsStoryVisible(viewportProbe >= revealThreshold);
-
-      let nextProgress = 0;
-
-      if (viewportProbe <= secondPivot) {
-        const local = (viewportProbe - firstPivot) / (secondPivot - firstPivot);
-        nextProgress = clamp(local, 0, 1) * 0.5;
-      } else {
-        const local = (viewportProbe - secondPivot) / (thirdPivot - secondPivot);
-        nextProgress = 0.5 + clamp(local, 0, 1) * 0.5;
-      }
-
-      setProgress(nextProgress);
-
-      if (viewportProbe >= thirdPivot) {
-        setActiveIndex(2);
-      } else if (viewportProbe >= secondPivot) {
-        setActiveIndex(1);
-      } else {
-        setActiveIndex(0);
-      }
-    };
-
-    const onScrollOrResize = () => {
-      if (frame) {
-        return;
-      }
-
-      frame = window.requestAnimationFrame(() => {
-        frame = 0;
-        update();
-      });
-    };
-
-    update();
-    window.addEventListener('scroll', onScrollOrResize, { passive: true });
-    window.addEventListener('resize', onScrollOrResize);
-
-    return () => {
-      window.removeEventListener('scroll', onScrollOrResize);
-      window.removeEventListener('resize', onScrollOrResize);
-      if (frame) {
-        window.cancelAnimationFrame(frame);
-      }
-    };
-  }, []);
-
-  if (!ready) {
-    return null;
-  }
+  const progress = steps.length > 1 ? activeIndex / (steps.length - 1) : 0;
 
   return (
-    <>
-      <div
-        className={`hidden xl:block fixed right-3 top-1/2 -translate-y-1/2 z-40 pointer-events-none transition-opacity duration-300 ${
-          isStoryVisible ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
-        <div className="w-[138px] rounded-xl p-2 neo-card opacity-85">
-          <div className="flex items-center gap-1 text-[#8B7D6F] mb-1.5">
-            <Sparkles className="w-2.5 h-2.5 text-[#C9A87C]" />
-            <p className="text-[8px] uppercase tracking-[0.16em]">Story</p>
-          </div>
+    <div className="pointer-events-none fixed right-4 top-1/2 z-40 hidden -translate-y-1/2 xl:block">
+      <div className="w-[148px] rounded-2xl p-3 neo-card opacity-90">
+        <div className="mb-2 flex items-center gap-1.5 text-[#8B7D6F]">
+          <Sparkles className="h-3 w-3 text-[#C9A87C]" />
+          <p className="text-[9px] uppercase tracking-[0.16em]">Story</p>
+        </div>
 
+        <div
+          className="relative pl-3"
+          role="progressbar"
+          aria-label="Progress alur layanan"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(progress * 100)}
+        >
+          <div className="absolute bottom-1 left-[4px] top-1 w-px bg-[#E9DDD0]" />
           <div
-            className="relative pl-3"
-            role="progressbar"
-            aria-label="Progress alur layanan"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(progress * 100)}
-          >
-            <div className="absolute left-[3px] top-1 bottom-1 w-px bg-[#E9DDD0]" />
-            <div
-              className="absolute left-[3px] top-1 w-px rounded-full bg-gradient-to-b from-[#C9A87C] to-[#A98352] transition-all duration-300"
-              style={{ height: `${clamp(progress, 0, 1) * 100}%` }}
-            />
+            className="absolute left-[4px] top-1 w-px rounded-full bg-gradient-to-b from-[#C9A87C] to-[#A98352] transition-all duration-300"
+            style={{ height: `${progress * 100}%` }}
+          />
 
-            <div className="space-y-2">
-              {steps.map((step, index) => {
-                const isActive = index <= activeIndex;
-                const Icon = step.icon;
-                return (
-                  <div key={step.id} className="relative">
-                    <span
-                      className={`absolute -left-[10px] top-1 h-2 w-2 rounded-full border transition-all duration-300 ${
-                        isActive
-                          ? 'bg-[#C9A87C] border-[#C9A87C] shadow-[0_0_0_2px_rgba(201,168,124,0.12)]'
-                          : 'bg-white border-[#D7C8B5]'
-                      }`}
-                    />
-                    <div
-                      className={`rounded-md px-1 py-0.5 transition-all duration-300 ${
-                        isActive ? 'neo-control' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-1">
-                        <Icon className={`w-2.5 h-2.5 ${isActive ? 'text-[#A98352]' : 'text-[#B8A48D]'}`} />
-                        <p className={`text-[9px] font-medium ${isActive ? 'text-[#2D2420]' : 'text-[#8B7D6F]'}`}>
-                          {step.label}
-                        </p>
-                      </div>
+          <div className="space-y-2.5">
+            {steps.map((step, index) => {
+              const isActive = index <= activeIndex;
+              const Icon = step.icon;
+
+              return (
+                <div key={step.id} className="relative">
+                  <span
+                    className={`absolute -left-[9px] top-1 h-2.5 w-2.5 rounded-full border transition-all duration-300 ${
+                      isActive
+                        ? 'border-[#C9A87C] bg-[#C9A87C] shadow-[0_0_0_2px_rgba(201,168,124,0.12)]'
+                        : 'border-[#D7C8B5] bg-white'
+                    }`}
+                  />
+                  <div
+                    className={`rounded-lg px-2 py-1 transition-all duration-300 ${
+                      isActive ? 'neo-control' : 'bg-white/35'
+                    }`}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <Icon className={`h-3 w-3 ${isActive ? 'text-[#A98352]' : 'text-[#B8A48D]'}`} />
+                      <p className={`text-[10px] font-medium ${isActive ? 'text-[#2D2420]' : 'text-[#8B7D6F]'}`}>
+                        {step.label}
+                      </p>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
-
-      <div
-        className={`xl:hidden fixed left-0 right-0 top-[74px] z-40 px-4 pointer-events-none transition-opacity duration-300 ${
-          isStoryVisible ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
-        <div className="rounded-lg px-2.5 py-1.5 neo-card opacity-85">
-          <div className="flex items-center justify-between gap-3 text-[9px] text-[#8B7D6F]">
-            <span className="uppercase tracking-[0.14em]">Story</span>
-            <span className="text-[#A98352] font-medium">{steps[activeIndex]?.label}</span>
-          </div>
-          <div className="mt-1 h-[3px] rounded-full bg-[#E9DDD0] overflow-hidden">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-[#C9A87C] to-[#A98352] transition-all duration-300"
-              style={{ width: `${clamp(progress, 0, 1) * 100}%` }}
-            />
-          </div>
-        </div>
-      </div>
-    </>
+    </div>
   );
 };
 

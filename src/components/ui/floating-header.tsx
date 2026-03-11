@@ -39,11 +39,11 @@ export function FloatingHeader({ crewPortalUrl }: FloatingHeaderProps) {
 
   return (
     <header className={cn(
-      'sticky top-4 z-50',
+      'sticky top-3 z-50 sm:top-4',
       'mx-auto w-full max-w-5xl rounded-xl border shadow-lg',
       'bg-white/90 supports-[backdrop-filter]:bg-white/80 backdrop-blur-lg',
     )}>
-      <nav className="mx-auto flex items-center justify-between px-4 py-2">
+      <nav className="mx-auto flex items-center justify-between px-3 py-2 sm:px-4">
 
         {/* Logo kiri */}
         <a
@@ -115,10 +115,14 @@ export function FloatingHeader({ crewPortalUrl }: FloatingHeaderProps) {
               variant="outline"
               onClick={() => setOpen(!open)}
               className="lg:hidden"
+              aria-label={open ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
             >
               <MenuIcon className="size-4" />
             </Button>
             <SheetContent
+              id="mobile-navigation"
               className="bg-white/95 supports-[backdrop-filter]:bg-white/90 backdrop-blur-lg"
               showClose={false}
               side="left"
