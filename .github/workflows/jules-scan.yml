@@ -2,7 +2,7 @@ name: Jules Auto Scan & Fix
 
 on:
   push:
-    branches: [master]
+  pull_request:
   schedule:
     - cron: '0 6 * * 1' # Setiap Senin jam 6 pagi UTC
   workflow_dispatch:
