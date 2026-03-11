@@ -284,9 +284,12 @@ All user-facing text is in **Bahasa Indonesia**. Code comments mix Indonesian an
 
 ## Related Documentation
 
-- [`SERVER_GUIDE.md`](./SERVER_GUIDE.md) — Server setup and deployment guide
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — System architecture overview and ADRs
+- [`CONTRIBUTING.md`](./CONTRIBUTING.md) — Development workflow and contribution guidelines
+- [`SECURITY.md`](./SECURITY.md) — Security policy and responsible disclosure
+- [`CHANGELOG.md`](./CHANGELOG.md) — Version history and notable changes
 - [`CLAUDE.md`](./CLAUDE.md) — AI assistant context file for codebase understanding
-- [`docs/`](./docs/) — Complete project dossier including architecture and operations guides
+- [`docs/`](./docs/) — Extended architecture documentation and ADR records
 
 ---
 

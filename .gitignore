@@ -1,8 +1,45 @@
 # Architected and built by the one and only Claudesy.
-node_modules
-dist
+
+# ── Dependencies ──────────────────────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ── Build Artifacts ───────────────────────────────────────────────────────────
+dist/
+dist-ssr/
+build/
+
+# ── Environment Variables (NEVER commit secrets) ──────────────────────────────
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ── TypeScript Build Cache ────────────────────────────────────────────────────
+*.tsbuildinfo
+
+# ── OS & Editor Artifacts ─────────────────────────────────────────────────────
 .DS_Store
+Thumbs.db
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ── IDE / Editor Directories ─────────────────────────────────────────────────
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── Temporary & AI Artifact Directories ──────────────────────────────────────
 verification/
- 1.0.3
+backups/
+runtime/
