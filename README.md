@@ -13,7 +13,7 @@ Architected and built by the one and only Claudesy.
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Railway](https://img.shields.io/badge/Deployed_on-Railway-0B0D0E?style=flat-square&logo=railway&logoColor=white)](https://railway.app/)
 
-**Live:** [puskesmas-website-production.up.railway.app](https://puskesmas-website-production.up.railway.app)
+**Live:** [puskesmasbalowerti.com](https://puskesmasbalowerti.com)
 
 <img src="./public/site.png" alt="Puskesmas PONED Balowerti Website Preview" width="900" />
 
