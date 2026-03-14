@@ -21,8 +21,8 @@ reflects significant engineering investment.
 
 This review identified and resolved **3 HIGH/MODERATE npm dependency vulnerabilities**, completed
 the **professional project scaffold** (CI/CD pipelines, GitHub templates, ADR documentation,
-editor standards), and confirmed **100% Claudesy brand signature compliance** across all source
-files.
+editor standards), aligned project versioning to **v1.1.0**, and confirmed **100% Claudesy brand
+signature compliance** across all source, configuration, and metadata files.
 
 **Overall Assessment:** Production-ready with minor improvements implemented. No critical
 security issues remain after remediation.
@@ -54,20 +54,23 @@ security issues remain after remediation.
 ### Pre-Review Status
 
 ```
-Files missing Claudesy signature: 2
+Files missing Claudesy signature: 4
   - public/google22238cc24e0d1002.html  (Google verification file — special format, excluded)
+  - public/serve.json
+  - package-lock.json
   - vite.config.d.ts
 ```
 
 ### Post-Review Status
 
 ```
-Files missing Claudesy signature: 0
+Files missing Claudesy signature: 0 (excluding verification files)
 ```
 
-All source files now carry a valid Claudesy brand signature. The Google verification file
-(`google22238cc24e0d1002.html`) uses a special non-standard format required by Google Search
-Console — adding a comment would invalidate it. It is excluded from compliance requirements.
+All source, metadata, and configuration files now carry a valid Claudesy brand signature.
+The Google verification file (`google22238cc24e0d1002.html`) uses a strict non-standard format
+required by Google Search Console — adding any content or comment would invalidate its integrity.
+It is the only file explicitly excluded from compliance requirements for technical stability.
 
 ### Compliance Scan Command
 
@@ -353,7 +356,7 @@ npm run lint
 | Modified | `.gitignore` (fixed stray entry, added comprehensive patterns) |
 | Modified | `vite.config.d.ts` (added brand signature) |
 | Modified | `README.md` (fixed broken reference) |
-| Modified | `CHANGELOG.md` (added v1.1.0 entry) |
+| Modified | `CHANGELOG.md` (added v1.1.0 entry, updated versioning) |
 | Created | `.github/ISSUE_TEMPLATE/bug_report.md` |
 | Created | `.github/ISSUE_TEMPLATE/feature_request.md` |
 | Created | `.github/PULL_REQUEST_TEMPLATE.md` |
@@ -366,7 +369,9 @@ npm run lint
 | Created | `docs/adr/003-tailwind-shadcn.md` |
 | Created | `docs/adr/004-static-reviews.md` |
 | Created | `REVIEW_REPORT.md` (this file) |
-| Updated | `package-lock.json` (dependency security fixes) |
+| Updated | `package.json` (version alignment to 1.1.0) |
+| Updated | `package-lock.json` (dependency security fixes, version alignment, branding) |
+| Modified | `public/serve.json` (added branding signature) |
 
 ---
 
